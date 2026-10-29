@@ -16,7 +16,7 @@ for ano in ["2022", "2026"]:
     f, dia = anos[ano]
     s = pl.read_parquet(f).with_columns(rec=pl.coalesce(
         pl.col("DT_BU_RECEBIDO").str.to_datetime("%Y-%m-%d %H:%M:%S", strict=False),
-        pl.col("DT_BU_RECEBIDO").str.to_datetime("%d/%m/%Y %H:%M:%S", strict=False))).sort("rec")
+        pl.col("DT_BU_RECEBIDO").str.to_datetime("%d/%m/%Y %H:%M:%S", strict=False))).sort(["rec", "SG_UF", "CD_MUNICIPIO", "NR_ZONA", "NR_SECAO"])  # desempate fixo: muitos BUs chegam no mesmo segundo
     s = s.with_columns(L=pl.col("lula").cum_sum(), F=pl.col("flavio").cum_sum(), i=pl.int_range(1, pl.len() + 1))
     s = s.with_columns(pct=100 * pl.col("i") / pl.len(), p=100 * pl.col("L") / (pl.col("L") + pl.col("F")))
     pts = []

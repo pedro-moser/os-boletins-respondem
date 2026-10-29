@@ -14,12 +14,12 @@ def agg(df, by):
 
 c19 = pl.datetime(2026, 10, 25, 19, 0)
 print("== 2026: seções encerradas >= 19h00 (Brasília) por UF ==")
-print(agg(b26.filter(pl.col("enc_brt") >= c19), "SG_UF").sort("secoes", descending=True).head(12))
+print(agg(b26.filter(pl.col("enc_brt") >= c19), "SG_UF").sort(["secoes", "SG_UF"], descending=[True, False]).head(12))
 
 print("\n== 2026: encerramento depois das 19h30 (Brasília) ==")
 late = b26.filter(pl.col("enc_brt") > pl.datetime(2026, 10, 25, 19, 30))
 print(agg(late.with_columns(h=pl.col("enc_brt").dt.hour()), "h").sort("h"))
-print(late.sort("enc_brt", descending=True).select("SG_UF", "NM_MUNICIPIO", "NR_ZONA", "NR_SECAO", "QT_APTOS",
+print(late.sort(["enc_brt", "SG_UF", "CD_MUNICIPIO", "NR_ZONA", "NR_SECAO"], descending=[True, False, False, False, False]).select("SG_UF", "NM_MUNICIPIO", "NR_ZONA", "NR_SECAO", "QT_APTOS",
       "QT_COMPARECIMENTO", "lula", "flavio", "abertura", "enc_brt", "DS_SECOES_AGREGADAS").head(8))
 
 print("\n== Limite aritmético (2026) ==")
@@ -38,7 +38,7 @@ def comp(b, ano, d):
     return agg(x, "SG_UF").with_columns(share=(100 * pl.col("secoes") / pl.col("secoes").sum()).round(1)).select("SG_UF", "share", "pct_lula")
 c = comp(b26, 2026, 25).rename({"share": "share26", "pct_lula": "lula26"}).join(
     comp(b22, 2022, 30).rename({"share": "share22", "pct_lula": "lula22"}), on="SG_UF", how="full", coalesce=True)
-print(c.sort("share26", descending=True).head(10))
+print(c.sort(["share26", "SG_UF"], descending=[True, False]).head(10))
 
 print("\n== Gradiente DENTRO de cada UF (2026 vs 2022): Lula% em seções que fecham 17h00 vs 17h05+ (até 17h59) ==")
 def grad(b, ano, d):

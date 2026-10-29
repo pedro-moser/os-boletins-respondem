@@ -312,7 +312,7 @@ eleição):
 | Sem explicação pelas listas (outra seção, fora das listas, carga diferente, seção sem correspondência) | 168 | — |
 
 As seções com urna substituída votaram **0,29 ponto a menos** em Lula do que a média do próprio
-município. As 168 sem explicação somam 37.639 eleitores e um saldo de +4.835 para Lula, cerca de 0,1%
+município. Nas 168 sem explicação votaram 37.639 pessoas, com saldo de +4.835 para Lula, cerca de 0,1%
 da margem. Das 39 seções sem correspondência esperada, 27 são do exterior. A explicação mais provável (não verificada) são urnas preparadas
 depois da geração da lista, em 24/10. Isso pode ser checado nos logs.
 
@@ -352,15 +352,18 @@ aleatórias:
 
 | | 2022 | 2026 |
 |---|---:|---:|
-| Trocas de liderança, ordem aleatória (mediana; máx.) | 11; 89 | 5; 50 |
-| Última troca, ordem aleatória (mediana; máx.) | seção 176; 3.372 (0,71%) | seção 34; 1.326 (0,27%) |
-| Amplitude da curva entre as seções 70 mil e 110 mil, ordem aleatória (mediana; máx.) | 0,06; 0,12 ponto | 0,06; 0,14 ponto |
+| Trocas de liderança, ordem aleatória (mediana; máx.) | 12; 92 | 5; 40 |
+| Última troca, ordem aleatória (mediana; máx.) | seção 206; 4.144 (0,88%) | seção 46; 615 (0,12%) |
+| Amplitude da curva entre as seções 70 mil e 110 mil, ordem aleatória (mediana; máx.) | 0,06; 0,13 ponto | 0,06; 0,20 ponto |
 | Ordem real (`DT_BU_RECEBIDO`): última troca | 67,6% | 47,2% |
 
 - **(a)/(b) A premissa está invertida.** Em ordem aleatória a curva converge para o valor final em poucas
-  centenas de seções: todas as trocas acontecem no início (no máximo 0,71% da apuração) e ficam
-  invisíveis no gráfico. Na ordem real de 2022 houve 18 trocas: 3 nas primeiras 1.025 seções e 15 num trecho
-  de ~100 seções perto da 319 mil, com as curvas encostadas — a virada de 67,6%.
+  centenas de seções: todas as trocas acontecem no início (no máximo 0,88% da apuração) e ficam
+  invisíveis no gráfico. Na ordem real de 2022, depois das primeiras 1.025 seções a liderança mudou de lado
+  uma única vez, às 18h43 (67,6%). O *número* de trocas nesse instante não é bem definido: muitos BUs chegam
+  no mesmo segundo e, com as curvas encostadas, a ordem dentro do segundo cria ou desfaz trocas (4 a 22 em 30
+  desempates aleatórios; 6 com o desempate fixo por seção usado nos scripts). A posição da última troca não
+  muda: 67,6% em 2022 e 47,2% em 2026 em todos os desempates.
 - **(c) O gráfico dele é a ordem real, não uma ordem aleatória.** A fatia de Bolsonaro na ordem real entre
   as seções 70 mil e 110 mil vai de 51,67% a 51,32%, exatamente o eixo do vídeo (0,515–0,518); numa ordem
   aleatória a curva já estaria em ~49,1%. A "queda linear" é a deriva de uma chegada que não é aleatória

@@ -33,7 +33,7 @@ for nr in cand.sort("QT_VOTOS", descending=True)["NR_VOTAVEL"].head(4):
     sec = sec.join(raw.filter(pl.col("NR_VOTAVEL") == nr).group_by(key).agg(pl.col("QT_VOTOS").sum().alias(f"c{nr}")),
                    on=key, how="left")
 sec = sec.with_columns(pl.col("^c\\d+$").fill_null(0))
-sec.write_parquet(out_sec)
+sec.sort(key).write_parquet(out_sec)  # ordem fixa: o group_by não garante ordem
 print(sec.height, "seções | Lula", sec["lula1"].sum(), "| Flávio", sec["flavio1"].sum(), "| outros", sec["outros1"].sum(),
       "| brancos", sec["brancos1"].sum(), "| nulos", sec["nulos1"].sum(), "| comparec", sec["comp1"].sum())
 print(pl.read_parquet(out_cand))

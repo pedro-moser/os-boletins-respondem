@@ -2,6 +2,7 @@
 dados/*
 !dados/urls_*.txt
 !dados/pagina_series.json
+!dados/sha512_nao_oficial.txt
 
 # Capturas de posts de terceiros (contêm nomes e fotos de pessoas comuns)
 prints-tese-golpista/

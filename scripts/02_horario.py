@@ -37,7 +37,7 @@ print(resumo(t, "antes"))
 
 print("\n== Quem está no grupo 'até 17h' em horário local? (por UF) ==")
 t = br.filter(pl.col("encerramento") <= pl.datetime(2026, 10, 25, 17, 0, 0))
-print(resumo(t, "SG_UF").sort("comparec", descending=True).head(15))
+print(resumo(t, "SG_UF").sort(["comparec", "SG_UF"], descending=[True, False]).head(15))
 
 print("\n== Distribuição do encerramento (Brasília), minuto a minuto, 16h55-17h30 ==")
 d = (br.filter(pl.col("enc_brt").is_between(pl.datetime(2026,10,25,16,55), pl.datetime(2026,10,25,17,30)))
@@ -46,7 +46,7 @@ print(resumo(d, "min").select("min", "secoes", "comparec", "pct_lula"))
 
 print("\n== Cauda: seções encerradas após 17h30 (Brasília), por UF ==")
 tail = br.filter(pl.col("enc_brt") > pl.datetime(2026, 10, 25, 17, 30))
-print(resumo(tail, "SG_UF").sort("secoes", descending=True))
+print(resumo(tail, "SG_UF").sort(["secoes", "SG_UF"], descending=[True, False]))
 print("máximo enc_brt:", br["enc_brt"].max(), "| máximo local:", br["encerramento"].max())
 print("\n== Grupo 'até 17h00' do post (minuto 17:00 local) — composição ==")
 g = br.with_columns(post_antes=pl.col("encerramento") < pl.datetime(2026, 10, 25, 17, 1),

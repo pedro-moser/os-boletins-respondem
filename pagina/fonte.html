@@ -154,6 +154,8 @@ details summary { cursor: pointer; color: var(--ink-2); }
 details[open] summary { margin-bottom: .5rem; }
 
 footer { display: grid; gap: 1rem; font-size: .92rem; color: var(--ink-2); border-top: 1px solid var(--rule); padding-top: 1.5rem; }
+footer code { font: .85em var(--mono); }
+footer ol { margin: 0; padding-left: 1.3rem; display: grid; gap: .3rem; }
 footer ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .3rem; }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
 @media (min-width: 40rem) { html { scroll-behavior: smooth; } }
@@ -488,7 +490,7 @@ footer ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .3rem; }
       <tr><td>Sem explicação pelas listas</td><td class="n">168</td><td class="n">—</td></tr>
     </tbody>
   </table></div>
-  <p>As 168 seções sem explicação somam 37.639 eleitores e um saldo de 4.835 votos para Lula, 0,1% da margem. Das 39 que não constavam na lista, 27 são do exterior. A explicação mais provável é que essas urnas foram preparadas depois que a lista foi gerada, na véspera da eleição. Isso pode ser confirmado nos registros (logs) das urnas.</p>
+  <p>Nas 168 seções sem explicação votaram 37.639 pessoas, com saldo de 4.835 votos para Lula, 0,1% da margem. Das 39 que não constavam na lista, 27 são do exterior. A explicação mais provável é que essas urnas foram preparadas depois que a lista foi gerada, na véspera da eleição. Isso pode ser confirmado nos registros (logs) das urnas.</p>
 </article>
 
 <!-- ====================================================== -->
@@ -527,21 +529,21 @@ footer ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .3rem; }
   </div>
   <p class="dizem">Num vídeo de 2022, um doutor em matemática mostra a curva da apuração: com 49% contra 51%, "só uma inversão" de liderança seria raríssimo, porque em ordens aleatórias de envio a liderança alternaria. Num trecho ampliado, Bolsonaro "sobe, cai, sobe" e depois cai em linha reta, o que seria um algoritmo que o penaliza. Sem isso, ele teria entre 60% e 65%.</p>
   <div class="curta"><div class="topo"><span class="label">Resposta curta</span><button class="copiar" type="button">Copiar</button></div>
-    <p>É o contrário. Sorteando a ordem de chegada das 472 mil seções de 2022, a liderança só troca nas primeiras centenas de seções; em 200 sorteios, a última troca foi no máximo na seção 3.372. O trecho do vídeo é a ordem real do TSE, que não é aleatória: dentro de cada estado, os últimos boletins votam um pouco mais no 13. O "serrilhado" tem um décimo de ponto, o mesmo tamanho do ruído de um sorteio. E o total não depende da ordem em que os boletins chegam.</p></div>
+    <p>É o contrário. Sorteando a ordem de chegada das 472 mil seções de 2022, a liderança só troca nas primeiras centenas de seções; em 200 sorteios, a última troca foi no máximo na seção 4.144. O trecho do vídeo é a ordem real do TSE, que não é aleatória: dentro de cada estado, os últimos boletins votam um pouco mais no 13. O "serrilhado" tem um décimo de ponto, o mesmo tamanho do ruído de um sorteio. E o total não depende da ordem em que os boletins chegam.</p></div>
   <div class="tabela"><table>
-    <thead><tr><th>Ordem de chegada</th><th class="n">Trocas de liderança</th><th class="n">Última troca</th></tr></thead>
+    <thead><tr><th>Ordem de chegada</th><th class="n">Última troca de liderança</th></tr></thead>
     <tbody>
-      <tr><td>2022, sorteada</td><td class="n">11</td><td class="n">seção 176<br>(máx. 0,7% da apuração)</td></tr>
-      <tr class="destaque"><td>2022, real</td><td class="n">18</td><td class="n">67,6% da apuração</td></tr>
-      <tr><td>2026, sorteada</td><td class="n">5</td><td class="n">seção 34<br>(máx. 0,3% da apuração)</td></tr>
-      <tr><td>2026, real</td><td class="n">20</td><td class="n">47,2% da apuração</td></tr>
+      <tr><td>2022, sorteada</td><td class="n">seção 206 de 472 mil<br>(no máximo 0,9% da apuração)</td></tr>
+      <tr class="destaque"><td>2022, real</td><td class="n">67,6% da apuração</td></tr>
+      <tr><td>2026, sorteada</td><td class="n">seção 46 de 499 mil<br>(no máximo 0,1% da apuração)</td></tr>
+      <tr><td>2026, real</td><td class="n">47,2% da apuração</td></tr>
     </tbody>
   </table></div>
   <p class="ressalva">Ordem sorteada: mediana de 200 sorteios, com o maior valor entre parênteses.</p>
   <ul class="pq">
     <li><strong>Ordem aleatória quase não cruza.</strong> A curva acumulada é uma média que vai pesando cada nova seção cada vez menos. Com 472 mil seções e quase 2 pontos de diferença no total, ela chega perto do resultado final em poucas centenas de seções e não sai mais dali.</li>
     <li><strong>O gráfico do vídeo mostra a ordem real.</strong> Entre as seções 70 mil e 110 mil, Bolsonaro vai de 51,7% a 51,3% na ordem real de chegada, exatamente a escala do vídeo. Numa ordem sorteada a curva já estaria em 49,1%, o resultado final. A "queda linear" é a mesma tendência que aparece na tese da virada às 20h24: os últimos boletins de cada estado votam mais no 13, em 2022 e em 2026.</li>
-    <li><strong>As 18 trocas reais de 2022:</strong> 3 nas primeiras mil seções e 15 em cerca de 100 seções perto da virada, quando as duas curvas estavam encostadas.</li>
+    <li><strong>"Só uma inversão" é o que aconteceu, e é o esperado.</strong> Em 2022, depois das primeiras mil seções, a liderança mudou de lado uma única vez, às 18h43. Nesse instante as curvas estavam encostadas e muitos boletins chegaram no mesmo segundo, por isso a contagem exata de trocas naquele segundo depende da ordem em que se põem boletins simultâneos. O momento da virada não depende.</li>
     <li><strong>A soma não muda.</strong> Cada boletim é impresso e afixado na porta da seção, e o total é o mesmo em qualquer ordem de chegada. Recortar trechos de uma curva que oscila décimos de ponto não leva ninguém de 49% a 60%.</li>
   </ul>
 </article>
@@ -550,7 +552,7 @@ footer ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .3rem; }
 <section class="stack" aria-labelledby="limites">
   <h2 id="limites">O que esta checagem não prova</h2>
   <p>Os boletins de urna não permitem auditar cada voto, e o voto é secreto. O que a checagem mostra é que nenhum dos padrões apresentados como prova de fraude é, de fato, evidência de fraude: todos aparecem também em eleições anteriores, se explicam por geografia, fuso e filas, ou são pequenos demais para mudar o resultado. Ela não prova que fraude é impossível em geral. Para isso existem outros mecanismos, como os testes de integridade das urnas, a auditoria dos códigos e os registros (logs) de cada urna.</p>
-  <p>Ainda em aberto: a contagem exata de votos depois das 17h e das 19h, e as 168 seções sem explicação pelas listas, que dependem da análise dos logs das urnas.</p>
+  <p>Ainda em aberto: a contagem exata de votos depois das 17h e das 19h, e as 168 seções em que a urna usada não é explicada pelas listas do TSE. Nessas 168 seções votaram 37.639 pessoas, e Lula teve no máximo 21 mil votos. Mesmo que todos fossem anulados, a diferença final cairia de 4,43 milhões para 4,41 milhões. As duas questões dependem da análise dos registros (logs) das urnas.</p>
 </section>
 
 <section class="stack" aria-labelledby="conversa">
@@ -563,7 +565,14 @@ footer ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .3rem; }
 </section>
 
 <footer>
-  <p><strong>Como foi feito.</strong> Análise de 28/10/2026, atualizada em 29/10/2026, com os boletins de urna oficiais (arquivos BWeb) do 1º e do 2º turno de 2026, do 1º e 2º turno de 2022 e do 2º turno de 2018, além da lista de urnas por seção do 2º turno de 2026. Todos os arquivos foram conferidos pelo código de integridade (SHA-512) publicado pelo TSE, e os totais reconstruídos batem exatamente com o resultado oficial. Os registros (logs) completos das urnas, com cerca de 134 GB, ainda não foram analisados.</p>
+  <p><strong>Como foi feito.</strong> Análise de 28/10/2026, atualizada em 29/10/2026, com os boletins de urna oficiais (arquivos BWeb) do 1º e do 2º turno de 2026, do 1º e 2º turno de 2022 e do 2º turno de 2018, além da lista de urnas por seção do 2º turno de 2026. Todos os arquivos foram conferidos pelo código de integridade (SHA-512) publicado pelo TSE, exceto os registros das urnas do Acre, para os quais o TSE não publica esse código. Os totais reconstruídos batem exatamente com o resultado oficial. Os registros (logs) completos das urnas, com cerca de 134 GB, ainda não foram analisados.</p>
+  <p><strong>Refaça você mesmo.</strong> Todo o código está em <a href="https://github.com/pedro-moser/os-boletins-respondem" rel="noopener">github.com/pedro-moser/os-boletins-respondem</a>. Um único comando refaz tudo a partir dos arquivos do TSE:</p>
+  <ol>
+    <li>Baixa os boletins de urna do Portal de Dados Abertos do TSE (cerca de 14 GB; a lista de endereços está no repositório).</li>
+    <li>Confere o código de integridade (SHA-512) de cada arquivo e para se algum não bater.</li>
+    <li>Monta a tabela por seção, roda cada análise e gera esta página. As saídas de cada análise ficam na pasta <code>resultados/</code>, para comparar com os números citados aqui.</li>
+  </ol>
+  <p>Num computador com Linux ou macOS: <code>git clone</code> do repositório e <code>./reproduzir.sh</code>. O passo a passo está no README.</p>
   <ul>
     <li><a href="https://dadosabertos.tse.jus.br/dataset/resultados-2026-boletim-de-urna" rel="noopener">TSE · Dados abertos: boletins de urna 2026</a></li>
     <li><a href="https://dadosabertos.tse.jus.br/dataset/resultados-2022-boletim-de-urna" rel="noopener">TSE · Dados abertos: boletins de urna 2022</a></li>

@@ -49,4 +49,4 @@ if outros.height:
 estranhas = s.filter(~pl.col("situacao").str.slice(0, 1).is_in(["1", "3", "4"]))
 print(f"seções sem explicação pelas listas (cat. 2, 5, 6 e sem correspondência): {estranhas.height}, "
       f"comparecimento {estranhas['QT_COMPARECIMENTO'].sum():,}, saldo Lula {estranhas['lula'].sum() - estranhas['flavio'].sum():+,}")
-print("por UF:", estranhas.group_by("SG_UF").len().sort("len", descending=True).head(8).rows())
+print("por UF:", estranhas.group_by("SG_UF").len().sort(["len", "SG_UF"], descending=[True, False]).head(8).rows())

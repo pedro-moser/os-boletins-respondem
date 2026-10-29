@@ -1,0 +1,12 @@
+
+################ 2022: 472,028 seções, 13 final = 50.902% ################
+ordem real: 6 trocas de liderança; última na seção 319,077 (67.6%)
+200 ordens aleatórias: trocas mediana 12 (p95 50, máx 92)
+  última troca: mediana na seção 206, p95 1606, máx 4,144 (0.88% da apuração)
+  amplitude da curva entre as seções 70 mil e 110 mil: mediana 0.059 ponto, máx 0.134
+
+################ 2026: 499,205 seções, 13 final = 51.785% ################
+ordem real: 23 trocas de liderança; última na seção 235,403 (47.2%)
+200 ordens aleatórias: trocas mediana 5 (p95 22, máx 40)
+  última troca: mediana na seção 46, p95 348, máx 615 (0.12% da apuração)
+  amplitude da curva entre as seções 70 mil e 110 mil: mediana 0.059 ponto, máx 0.197

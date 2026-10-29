@@ -18,7 +18,7 @@ for ano, s in [("2018", s18), ("2022", s22), ("2026", s26)]:
 print(pl.DataFrame(rows))
 z = s26.filter(pl.col("SG_UF") != "ZZ", pl.col("QT_ABSTENCOES") == 0)
 print("2026, seções com abstenção zero:")
-print(z.select("SG_UF", "NM_MUNICIPIO", "NR_ZONA", "NR_SECAO", "QT_APTOS", "QT_COMPARECIMENTO", "lula", "flavio").sort("QT_APTOS", descending=True).head(10))
+print(z.select("SG_UF", "NM_MUNICIPIO", "NR_ZONA", "NR_SECAO", "QT_APTOS", "QT_COMPARECIMENTO", "lula", "flavio").sort(["QT_APTOS", "SG_UF", "NM_MUNICIPIO", "NR_ZONA", "NR_SECAO"], descending=[True, False, False, False, False]).head(10))
 print("Lula% nessas seções:", round(100 * z["lula"].sum() / (z["lula"].sum() + z["flavio"].sum()), 2), "| aptos medianos:", z["QT_APTOS"].median())
 
 print("\n== Seções com ZERO votos para o adversário do 13 (2º turno) ==")
@@ -27,10 +27,10 @@ for ano, s in [("2018", s18), ("2022", s22), ("2026", s26)]:
     z13 = s.filter(pl.col("lula") == 0, pl.col("flavio") > 0)
     print(f"{ano}: zero p/ adversário = {zz.height} (mediana {zz['lula'].median()} votos no 13) | zero p/ 13 = {z13.height}")
 zz = s26.filter(pl.col("flavio") == 0, pl.col("lula") > 0).join(t1_26.select(*key, "lula1", "flavio1", "outros1"), on=key, how="left")
-print("2026, 106 seções sem voto no Flávio — por UF:", zz.group_by("SG_UF").len().sort("len", descending=True).rows())
+print("2026, 106 seções sem voto no Flávio — por UF:", zz.group_by("SG_UF").len().sort(["len", "SG_UF"], descending=[True, False]).rows())
 print("Flávio tinha zero também no 1º turno em", zz.filter(pl.col("flavio1") == 0).height, "delas; votos do Flávio no 1T nelas:",
       zz["flavio1"].sum(), "| Lula 1T:", zz["lula1"].sum(), "→ 2T:", zz["lula"].sum())
-print(zz.select("SG_UF", "NM_MUNICIPIO", "NR_SECAO", "QT_APTOS", "lula1", "flavio1", "outros1", "lula", "flavio").sort("lula", descending=True).head(8))
+print(zz.select("SG_UF", "NM_MUNICIPIO", "NR_SECAO", "QT_APTOS", "lula1", "flavio1", "outros1", "lula", "flavio").sort(["lula", "SG_UF", "NM_MUNICIPIO", "NR_SECAO"], descending=[True, False, False, False]).head(8))
 
 print("\n== Comparecimento do 1º para o 2º turno por reduto (decil de Lula% no 1T) ==")
 def red(t1, t2, ano):
@@ -52,4 +52,4 @@ d = t1_26.join(s26.select(*key, "QT_COMPARECIMENTO", "QT_APTOS", "lula", "flavio
 u = d.group_by("SG_UF").agg(delta=(pl.col("QT_COMPARECIMENTO") - pl.col("comp1")).sum(),
                             dif_pp=(100 * (pl.col("QT_COMPARECIMENTO").sum() / pl.col("QT_APTOS").sum() - pl.col("comp1").sum() / pl.col("aptos1").sum())).round(2),
                             lula2=(100 * pl.col("lula").sum() / (pl.col("lula") + pl.col("flavio")).sum()).round(1))
-print(u.sort("delta", descending=True).head(10)); print(u.sort("delta").head(5))
+print(u.sort(["delta", "SG_UF"], descending=[True, False]).head(10)); print(u.sort(["delta", "SG_UF"]).head(5))

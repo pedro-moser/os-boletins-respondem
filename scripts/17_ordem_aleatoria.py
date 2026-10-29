@@ -21,7 +21,7 @@ def trocas(L, F):
 for ano, f in [("2022", sys.argv[1]), ("2026", sys.argv[2])]:
     s = pl.read_parquet(f).with_columns(rec=pl.coalesce(
         pl.col("DT_BU_RECEBIDO").str.to_datetime("%Y-%m-%d %H:%M:%S", strict=False),
-        pl.col("DT_BU_RECEBIDO").str.to_datetime("%d/%m/%Y %H:%M:%S", strict=False))).sort("rec")
+        pl.col("DT_BU_RECEBIDO").str.to_datetime("%d/%m/%Y %H:%M:%S", strict=False))).sort(["rec", "SG_UF", "CD_MUNICIPIO", "NR_ZONA", "NR_SECAO"])  # desempate fixo: muitos BUs chegam no mesmo segundo
     L, F = s["lula"].to_numpy().astype(float), s["flavio"].to_numpy().astype(float)
     n = len(L)
     print(f"\n################ {ano}: {n:,} seções, 13 final = {100 * L.sum() / (L.sum() + F.sum()):.3f}% ################")

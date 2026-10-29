@@ -56,6 +56,6 @@ sec = sec.join(tz.select("SG_UF", "CD_MUNICIPIO", "offset_h"), on=["SG_UF", "CD_
 sec = sec.with_columns(
     enc_brt=pl.col("encerramento") + pl.duration(hours=pl.col("offset_h").fill_null(0)),
 )
-sec.drop("QT_ELEI_BIOM_SEM_HABILITACAO").write_parquet(out)
+sec.drop("QT_ELEI_BIOM_SEM_HABILITACAO").sort(key).write_parquet(out)  # ordem fixa: o group_by não garante ordem
 print(sec.height, "seções;", sec["lula"].sum(), "Lula;", sec["flavio"].sum(), "Flávio")
 print(tz.group_by("offset_h").len().sort("offset_h"))

@@ -1,0 +1,30 @@
+
+##### 2026: última troca de liderança em 2026-10-25 20:25:18 com 48.63% dos BUs; vencedor final 13
+% do 13 por quartil de chegada dentro da própria UF (Q1 = primeiros 25% da UF):
+shape: (4, 4)
+┌─────┬───────┬─────────────┬───────────────┐
+│ q   ┆ pct13 ┆ capital_pct ┆ eleitores_med │
+│ --- ┆ ---   ┆ ---         ┆ ---           │
+│ i8  ┆ f64   ┆ f64         ┆ f64           │
+╞═════╪═══════╪═════════════╪═══════════════╡
+│ 1   ┆ 50.94 ┆ 25.6        ┆ 325.0         │
+│ 2   ┆ 51.34 ┆ 18.3        ┆ 327.0         │
+│ 3   ┆ 51.76 ┆ 17.2        ┆ 328.0         │
+│ 4   ┆ 53.07 ┆ 21.5        ┆ 329.0         │
+└─────┴───────┴─────────────┴───────────────┘
+capital x interior, % do 13 e mediana de chegada: [(False, 51.49, datetime.datetime(2026, 10, 25, 20, 26, 35)), (True, 52.75, datetime.datetime(2026, 10, 25, 20, 24, 32))]
+
+##### 2022: última troca de liderança em 2022-10-30 18:44:11 com 68.26% dos BUs; vencedor final 13
+% do 13 por quartil de chegada dentro da própria UF (Q1 = primeiros 25% da UF):
+shape: (4, 4)
+┌─────┬───────┬─────────────┬───────────────┐
+│ q   ┆ pct13 ┆ capital_pct ┆ eleitores_med │
+│ --- ┆ ---   ┆ ---         ┆ ---           │
+│ i8  ┆ f64   ┆ f64         ┆ f64           │
+╞═════╪═══════╪═════════════╪═══════════════╡
+│ 1   ┆ 49.98 ┆ 24.7        ┆ 336.0         │
+│ 2   ┆ 50.35 ┆ 22.2        ┆ 342.0         │
+│ 3   ┆ 50.98 ┆ 20.0        ┆ 342.0         │
+│ 4   ┆ 52.3  ┆ 17.0        ┆ 340.0         │
+└─────┴───────┴─────────────┴───────────────┘
+capital x interior, % do 13 e mediana de chegada: [(False, 51.27, datetime.datetime(2022, 10, 30, 18, 27, 48)), (True, 49.69, datetime.datetime(2022, 10, 30, 18, 20, 2))]

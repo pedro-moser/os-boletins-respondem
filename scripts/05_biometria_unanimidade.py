@@ -41,6 +41,6 @@ for ano, s in anos.items():
     print("mediana de votos válidos nas seções 100%:",
           v.filter((pl.col("pct_lula") == 1) | (pl.col("pct_lula") == 0))["validos"].median())
     print("UF das seções >90% Lula (top 6):",
-          v.filter(pl.col("pct_lula") > 0.9).group_by("SG_UF").len().sort("len", descending=True).head(6).rows())
+          v.filter(pl.col("pct_lula") > 0.9).group_by("SG_UF").len().sort(["len", "SG_UF"], descending=[True, False]).head(6).rows())
     print("UF das seções >90% n22 (top 6):",
-          v.filter(pl.col("pct_lula") < 0.1).group_by("SG_UF").len().sort("len", descending=True).head(6).rows())
+          v.filter(pl.col("pct_lula") < 0.1).group_by("SG_UF").len().sort(["len", "SG_UF"], descending=[True, False]).head(6).rows())

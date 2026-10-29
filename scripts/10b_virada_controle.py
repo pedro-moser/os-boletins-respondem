@@ -14,7 +14,8 @@ for ano, f in [("2026", sys.argv[1]), ("2022", sys.argv[2])]:
         rec=pl.coalesce(pl.col("DT_BU_RECEBIDO").str.to_datetime("%Y-%m-%d %H:%M:%S", strict=False),
                         pl.col("DT_BU_RECEBIDO").str.to_datetime("%d/%m/%Y %H:%M:%S", strict=False)))
     s = s.join(cap, on=["SG_UF", "NM_MUNICIPIO"], how="left").with_columns(pl.col("capital").fill_null(False))
-    s = s.sort("rec").with_columns(L=pl.col("lula").cum_sum(), F=pl.col("flavio").cum_sum(),
+    # Desempate fixo pela seção: muitos BUs chegam no mesmo segundo.
+    s = s.sort(["rec", "SG_UF", "CD_MUNICIPIO", "NR_ZONA", "NR_SECAO"]).with_columns(L=pl.col("lula").cum_sum(), F=pl.col("flavio").cum_sum(),
                                    pct=(100 * pl.int_range(1, pl.len() + 1) / pl.len()).round(2))
     s = s.with_columns(lider=pl.when(pl.col("L") > pl.col("F")).then(pl.lit("13")).otherwise(pl.lit("22")))
     ult = s.filter(pl.col("lider") != pl.col("lider").shift(1)).tail(1)
