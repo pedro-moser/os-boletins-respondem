@@ -1,0 +1,14 @@
+# Dados brutos e derivados do TSE (~14 GB): baixe com as listas dados/urls_*.txt
+dados/*
+!dados/urls_*.txt
+!dados/pagina_series.json
+
+# Capturas de posts de terceiros (contêm nomes e fotos de pessoas comuns)
+prints-tese-golpista/
+
+# Build antigo; a página publicada é docs/index.html (gerada por build.sh)
+pagina/os-boletins-respondem.html
+
+__pycache__/
+*.pyc
+.venv/

@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Os Boletins Respondem</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Checagem, com os boletins de urna oficiais do TSE, das teses de fraude que circulam sobre o 2º turno de 2026.">
+<style>
+/* Layout: uma coluna de leitura (~42rem); topo em forma de boletim de urna impresso;
+   cada tese é um bloco com veredito em forma de tecla da urna, resposta curta, números e explicação. */
+:root {
+  --paper: #f6f7f8;        /* fundo */
+  --sheet: #ffffff;        /* superfícies (boletim, tabelas) */
+  --ink: #15191d;          /* texto principal */
+  --ink-2: #4c5660;        /* texto secundário */
+  --rule: #d6dbe0;         /* linhas e bordas */
+  --grid: #e7eaed;         /* grade dos gráficos */
+  --accent: #1d5fae;       /* links e foco */
+  --key-corrige: #e2852f;  /* tecla CORRIGE da urna */
+  --key-corrige-ink: #1b0f04;
+  --key-branco: #ffffff;   /* tecla BRANCO */
+  --key-branco-ink: #15191d;
+  --key-confirma: #2f9e4f; /* tecla CONFIRMA */
+  --key-edge: rgba(0,0,0,.28);
+  --s2026: #2a78d6;
+  --s2022: #eb6834;
+  --s2018: #1baf7a;
+  --quote: #eef1f4;
+
+  --display: "Iowan Old Style", "Charter", "Palatino Linotype", "Book Antiqua", Georgia, "DejaVu Serif", serif;
+  --body: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #14171a; --sheet: #1c2024; --ink: #e9ecef; --ink-2: #a9b2bb; --rule: #343a41; --grid: #262b30;
+    --accent: #7fb1ee; --key-corrige: #d9782a; --key-corrige-ink: #140a02; --key-branco: #e9ecef; --key-branco-ink: #14171a;
+    --key-confirma: #3aa65a; --key-edge: rgba(0,0,0,.6); --s2026: #3987e5; --s2022: #d95926; --s2018: #199e70; --quote: #20252a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #14171a; --sheet: #1c2024; --ink: #e9ecef; --ink-2: #a9b2bb; --rule: #343a41; --grid: #262b30;
+  --accent: #7fb1ee; --key-corrige: #d9782a; --key-corrige-ink: #140a02; --key-branco: #e9ecef; --key-branco-ink: #14171a;
+  --key-confirma: #3aa65a; --key-edge: rgba(0,0,0,.6); --s2026: #3987e5; --s2022: #d95926; --s2018: #199e70; --quote: #20252a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: max(24px, env(safe-area-inset-top, 0px)) max(48px, env(safe-area-inset-bottom, 0px));
+}
+main { max-width: 44rem; margin: 0 auto; display: grid; gap: 3.5rem; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(2.2rem, 7vw, 3.4rem); letter-spacing: -.01em; }
+h2 { font-size: clamp(1.5rem, 4.4vw, 1.95rem); }
+h3 { font-size: 1.05rem; font-family: var(--body); font-weight: 700; }
+p { margin: 0; }
+.stack { display: grid; gap: 1rem; }
+.label { font: 600 .72rem/1.2 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+.lede { font-size: 1.12rem; color: var(--ink); }
+.muted { color: var(--ink-2); }
+.num, td.n, th.n { font-variant-numeric: tabular-nums; }
+
+/* ---------- topo: boletim de urna ---------- */
+header.top { display: grid; gap: 1.5rem; }
+.bu {
+  background: var(--sheet); border: 1px solid var(--rule); font: .82rem/1.55 var(--mono);
+  padding: 1rem 1.1rem 1.1rem; max-width: 25rem; box-shadow: 0 1px 0 var(--rule);
+  background-image: radial-gradient(circle at 6px 0, transparent 5px, var(--sheet) 5.5px);
+}
+.bu .linha { display: flex; justify-content: space-between; gap: 1rem; }
+.bu .sep { border-top: 1px dashed var(--rule); margin: .55rem 0; }
+.bu .tit { text-align: center; font-weight: 700; letter-spacing: .06em; }
+.bu .big { font-weight: 700; }
+
+/* ---------- teclas da urna (vereditos) ---------- */
+.key {
+  display: inline-flex; align-items: center; gap: .4rem; font: 700 .7rem/1 var(--mono); letter-spacing: .07em; text-transform: uppercase;
+  padding: .42rem .6rem .38rem; border-radius: 5px; border: 1px solid var(--key-edge); box-shadow: inset 0 -2px 0 var(--key-edge);
+  white-space: nowrap;
+}
+.key.corrige { background: var(--key-corrige); color: var(--key-corrige-ink); }
+.key.branco { background: var(--key-branco); color: var(--key-branco-ink); }
+.key.semdado { background: transparent; color: var(--ink-2); border-style: dashed; box-shadow: none; }
+.legenda-teclas { display: flex; flex-wrap: wrap; gap: .6rem 1.2rem; align-items: center; font-size: .88rem; color: var(--ink-2); }
+.legenda-teclas > span { display: inline-flex; gap: .5rem; align-items: center; }
+
+/* ---------- índice ---------- */
+.indice { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--rule); }
+.indice li { border-bottom: 1px solid var(--rule); }
+.indice a { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .8rem; align-items: center; padding: .7rem 0; color: var(--ink); text-decoration: none; }
+.indice a:hover .t { text-decoration: underline; }
+.indice .t { min-width: 0; }
+.grupo-titulo { margin-top: .5rem; }
+
+/* ---------- caixas ---------- */
+.perguntas { counter-reset: q; list-style: none; padding: 0; margin: 0; display: grid; gap: .9rem; }
+.perguntas li { display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: .6rem; }
+.perguntas li::before { counter-increment: q; content: counter(q); font: 700 1.3rem/1.2 var(--display); color: var(--accent); }
+
+/* ---------- tese ---------- */
+.tese { display: grid; gap: 1.25rem; scroll-margin-top: 1rem; }
+.tese-cab { display: grid; gap: .7rem; padding-top: 1.4rem; border-top: 2px solid var(--ink); }
+.tese-cab .meta { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; justify-content: space-between; }
+.dizem { background: var(--quote); padding: .85rem 1rem; border-radius: 4px; font-style: italic; }
+.dizem::before { content: "O que dizem"; display: block; font: 600 .7rem/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; font-style: normal; color: var(--ink-2); margin-bottom: .25rem; }
+.curta { border: 1px solid var(--rule); background: var(--sheet); border-radius: 6px; padding: .9rem 1rem; display: grid; gap: .6rem; }
+.curta .topo { display: flex; justify-content: space-between; align-items: center; gap: .8rem; }
+.curta p { font-size: 1.04rem; }
+button.copiar {
+  font: 600 .74rem/1 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink); background: transparent;
+  border: 1px solid var(--rule); border-radius: 4px; padding: .45rem .6rem; cursor: pointer; white-space: nowrap;
+}
+button.copiar:hover { border-color: var(--ink-2); }
+ul.pq { margin: 0; padding-left: 1.15rem; display: grid; gap: .5rem; }
+.ressalva { border-left: 3px solid var(--rule); padding-left: .9rem; color: var(--ink-2); font-size: .95rem; }
+
+/* ---------- tabelas ---------- */
+.tabela { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; background: var(--sheet); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { padding: .5rem .7rem; text-align: left; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { font: 600 .72rem/1.3 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); background: var(--sheet); }
+td.n, th.n { text-align: right; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+tr.destaque td { font-weight: 700; }
+
+/* ---------- gráficos ---------- */
+figure { margin: 0; display: grid; gap: .5rem; }
+figcaption { font-size: .9rem; color: var(--ink-2); }
+.grafico { position: relative; width: 100%; min-height: 12rem; }
+.grafico svg { display: block; width: 100%; height: auto; overflow: visible; }
+.grafico text { fill: var(--ink-2); font: 12px var(--body); }
+.grafico text.forte { fill: var(--ink); font-weight: 600; }
+.grafico .eixo { stroke: var(--rule); }
+.grafico .grade { stroke: var(--grid); }
+.grafico .ref { stroke: var(--ink-2); stroke-dasharray: 3 3; }
+.grafico .alvo { fill: transparent; cursor: default; }
+.grafico .cruz { stroke: var(--ink-2); stroke-width: 1; }
+.legenda { display: flex; flex-wrap: wrap; gap: .4rem 1rem; font-size: .85rem; color: var(--ink-2); }
+.legenda span { display: inline-flex; align-items: center; gap: .4rem; }
+.legenda i { width: .8rem; height: .8rem; border-radius: 2px; display: inline-block; }
+.tip {
+  position: absolute; pointer-events: none; z-index: 5; background: var(--ink); color: var(--paper); font: .8rem/1.35 var(--body);
+  padding: .4rem .55rem; border-radius: 4px; max-width: 15rem; white-space: pre-line; transform: translate(-50%, calc(-100% - 10px));
+}
+details { font-size: .9rem; }
+details summary { cursor: pointer; color: var(--ink-2); }
+details[open] summary { margin-bottom: .5rem; }
+
+footer { display: grid; gap: 1rem; font-size: .92rem; color: var(--ink-2); border-top: 1px solid var(--rule); padding-top: 1.5rem; }
+footer ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .3rem; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+@media (min-width: 40rem) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+<main>
+
+<header class="top">
+  <p class="label">Eleições 2026 · 2º turno · checagem com dados oficiais do TSE</p>
+  <h1>Os boletins respondem</h1>
+  <p class="lede">Depois do 2º turno, circularam relatórios e posts dizendo que os números do TSE provam fraude. Esta página testa cada uma dessas teses com os boletins de urna oficiais, seção por seção, e compara 2026 com 2022 e 2018.</p>
+  <div class="bu" aria-label="Resultado oficial do 2º turno de 2026">
+    <div class="tit">BOLETIM · TOTAL BRASIL</div>
+    <div class="tit muted">2º TURNO · 25/10/2026 · PRESIDENTE</div>
+    <div class="sep"></div>
+    <div class="linha"><span>13 LULA</span><span class="num">64.256.232</span></div>
+    <div class="linha"><span>22 FLÁVIO BOLSONARO</span><span class="num">59.826.041</span></div>
+    <div class="sep"></div>
+    <div class="linha big"><span>DIFERENÇA</span><span class="num">4.430.191</span></div>
+    <div class="linha"><span>COMPARECIMENTO</span><span class="num">128.236.074</span></div>
+    <div class="linha"><span>SEÇÕES</span><span class="num">499.205</span></div>
+  </div>
+</header>
+
+<section class="stack" aria-labelledby="como">
+  <h2 id="como">Três perguntas que desmontam quase toda tese</h2>
+  <ol class="perguntas">
+    <li><p><strong>O mesmo padrão aparece em outra eleição?</strong> Se a "anomalia" também existe em 2022 ou em 2018, ela não pode ser prova de fraude em 2026. Em 2018 o candidato 13 perdeu; em 2022 não houve prorrogação de horário.</p></li>
+    <li><p><strong>A comparação é entre lugares parecidos?</strong> O Nordeste vota mais em Lula e é diferente do Sul em quase tudo: idade, fuso, tamanho das seções, uso de biometria. Muitas "anomalias" somem quando se compara uma seção com outra do mesmo município ou da mesma escola.</p></li>
+    <li><p><strong>O efeito tem tamanho para mudar o resultado?</strong> A diferença foi de 4,43 milhões de votos. Uma suspeita que envolve 30 mil votos pode até merecer explicação, mas não muda quem venceu.</p></li>
+  </ol>
+</section>
+
+<section class="stack" aria-labelledby="idx">
+  <h2 id="idx">As teses</h2>
+  <div class="legenda-teclas" aria-label="Legenda dos vereditos">
+    <span><span class="key corrige">Corrige</span> a tese não se sustenta nos dados</span>
+    <span><span class="key branco">Branco</span> o fato é real, mas não indica fraude</span>
+    <span><span class="key semdado">Sem resultado</span> não há o que testar</span>
+  </div>
+  <p class="label grupo-titulo">Do "Relatório Pericial Independente"</p>
+  <ol class="indice">
+    <li><a href="#t-17h"><span class="t">"Até as 17h, Flávio venceu com 52,39%"</span><span class="key corrige">Corrige</span></a></li>
+    <li><a href="#t-19h"><span class="t">"A prorrogação até as 19h virou a eleição"</span><span class="key corrige">Corrige</span></a></li>
+    <li><a href="#t-bio"><span class="t">"8,6 milhões votaram sem biometria, o dobro da margem"</span><span class="key corrige">Corrige</span></a></li>
+    <li><a href="#t-unan"><span class="t">"Seções com mais de 90% para Lula, 18 para cada uma do Flávio"</span><span class="key branco">Branco</span></a></li>
+    <li><a href="#t-benford"><span class="t">"A Lei de Benford mostra manipulação"</span><span class="key semdado">Sem resultado</span></a></li>
+    <li><a href="#t-72h"><span class="t">"Os dados foram escondidos por 72 horas"</span><span class="key corrige">Corrige</span></a></li>
+  </ol>
+  <p class="label grupo-titulo">Outras que circulam</p>
+  <ol class="indice">
+    <li><a href="#t-turnos"><span class="t">"É matematicamente impossível Lula ganhar tantos votos do 1º para o 2º turno"</span><span class="key corrige">Corrige</span></a></li>
+    <li><a href="#t-virada"><span class="t">"A virada às 20h24 é suspeita"</span><span class="key branco">Branco</span></a></li>
+    <li><a href="#t-comp"><span class="t">"Há seções com comparecimento impossível"</span><span class="key corrige">Corrige</span></a></li>
+    <li><a href="#t-zero"><span class="t">"Há seções com zero votos para Flávio"</span><span class="key branco">Branco</span></a></li>
+    <li><a href="#t-redutos"><span class="t">"O comparecimento cresceu só nos redutos de Lula"</span><span class="key corrige">Corrige</span></a></li>
+    <li><a href="#t-antigas"><span class="t">"As urnas antigas votaram mais em Lula"</span><span class="key corrige">Corrige</span></a></li>
+    <li><a href="#t-trocadas"><span class="t">"Urnas foram trocadas no meio da votação"</span><span class="key corrige">Corrige</span></a></li>
+  </ol>
+</section>
+
+<!-- ====================================================== -->
+<article class="tese" id="t-17h">
+  <div class="tese-cab">
+    <div class="meta"><span class="label">Relatório pericial · capítulo 1</span><span class="key corrige">Corrige</span></div>
+    <h2>"Até as 17h, Flávio venceu com 52,39%"</h2>
+  </div>
+  <p class="dizem">Nas urnas encerradas até as 17h00, Flávio teve 52,39% dos votos válidos. A vitória de Lula foi fabricada nas urnas que fecharam depois do horário legal.</p>
+  <div class="curta"><div class="topo"><span class="label">Resposta curta</span><button class="copiar" type="button">Copiar</button></div>
+    <p>O número está certo, mas o corte é enganoso. Com o mesmo critério, Bolsonaro também "venceu até as 17h" em 2022, uma eleição sem nenhuma prorrogação. Fechar a urna às 17h01 é o normal: quem está na fila às 17h ainda vota.</p></div>
+  <figure>
+    <figcaption>% dos votos válidos do candidato 13 nos dois grupos do corte do post (urnas fechadas no minuto 17h00 do horário local contra todas as outras)</figcaption>
+    <div class="grafico" id="g-corte"></div>
+    <div class="legenda"><span><i style="background:var(--ink-2)"></i>"até as 17h"</span><span><i style="background:transparent;border:2px solid var(--ink-2)"></i>"depois das 17h"</span></div>
+  </figure>
+  <h3>Por que isso acontece</h3>
+  <ul class="pq">
+    <li><strong>Fuso horário.</strong> Desde 2022 a votação segue o horário de Brasília. MT, MS, RO, RR, AC e parte do AM fecham às 15h ou 16h no relógio local, e o boletim registra a hora local. Todas essas urnas caem no grupo "até as 17h". São estados onde Flávio teve folga (Lula 40% nelas, saldo de 1,44 milhão para Flávio).</li>
+    <li><strong>Fila.</strong> A urna só é encerrada depois que vota o último eleitor que estava na fila às 17h. Por isso, 70% das seções do país fecharam entre 17h01 e 17h05. Isso não é "depois do prazo legal".</li>
+    <li><strong>Quem tem fila.</strong> Seções grandes, urbanas e do Nordeste têm mais fila e votam mais em Lula. O voto no 13 sobe a cada minuto de atraso no fechamento também em 2022, sem prorrogação nenhuma:</li>
+  </ul>
+  <figure>
+    <figcaption>% dos votos válidos do 13 conforme o minuto em que a urna foi encerrada (horário de Brasília)</figcaption>
+    <div class="grafico" id="g-grad"></div>
+    <div class="legenda"><span><i style="background:var(--s2026)"></i>2026</span><span><i style="background:var(--s2022)"></i>2022</span><span><i style="background:var(--s2018)"></i>2018</span></div>
+  </figure>
+  <p class="ressalva">Em 2018 a votação seguia o horário local de cada estado e o gradiente é bem mais fraco. Naquele ano Bolsonaro ia bem nas grandes cidades do Sudeste, onde se formam as filas. O tamanho do efeito depende da geografia do voto em cada eleição; a comparação decisiva é 2022, com os mesmos números de candidato e o mesmo horário unificado.</p>
+</article>
+
+<!-- ====================================================== -->
+<article class="tese" id="t-19h">
+  <div class="tese-cab">
+    <div class="meta"><span class="label">Relatório pericial · capítulo 2</span><span class="key corrige">Corrige</span></div>
+    <h2>"A prorrogação até as 19h virou a eleição"</h2>
+  </div>
+  <p class="dizem">Mais de 2,5 milhões de eleitores votaram em urnas que passaram do horário. Nas seções que fecharam depois das 19h, Lula teve 72% na Bahia, 66% em Pernambuco e 83% no Maranhão.</p>
+  <div class="curta"><div class="topo"><span class="label">Resposta curta</span><button class="copiar" type="button">Copiar</button></div>
+    <p>A prorrogação existiu, mas é pequena demais para mudar o resultado. Mesmo que todos os votos de Lula nas 8.845 seções que fecharam depois de 17h15 fossem dados ao Flávio, Lula venceria por 1,7 milhão. E a tabela do post omite o Rio de Janeiro, o estado com mais seções depois das 19h, onde Flávio venceu nelas.</p></div>
+  <figure>
+    <figcaption>Diferença final a favor de Lula em cada cenário, em milhões de votos. Cenários aplicados às 8.845 seções que fecharam a partir das 17h16 (2,54 milhões de eleitores).</figcaption>
+    <div class="grafico" id="g-limite"></div>
+  </figure>
+  <p class="label">Seções encerradas depois das 19h, por estado</p>
+  <div class="tabela"><table>
+    <thead><tr><th>UF</th><th class="n">Seções</th><th class="n">% Lula</th><th>Está no post?</th></tr></thead>
+    <tbody>
+      <tr class="destaque"><td>RJ</td><td class="n">2.805</td><td class="n">45,81</td><td>Não</td></tr>
+      <tr><td>SP</td><td class="n">1.571</td><td class="n">57,46</td><td>Sim</td></tr>
+      <tr><td>BA</td><td class="n">936</td><td class="n">72,31</td><td>Sim</td></tr>
+      <tr><td>PE</td><td class="n">657</td><td class="n">65,70</td><td>Sim</td></tr>
+      <tr><td>PB</td><td class="n">275</td><td class="n">52,56</td><td>Não</td></tr>
+      <tr class="destaque"><td>MA</td><td class="n">3</td><td class="n">83,31</td><td>Sim, sem o número de seções</td></tr>
+    </tbody>
+  </table></div>
+  <h3>O que dá para afirmar</h3>
+  <ul class="pq">
+    <li>A prorrogação aparece nos dados: 6.352 seções fecharam depois das 19h em 2026, contra 21 em 2022 e 34 em 2018.</li>
+    <li>"2,5 milhões votaram em urnas que passaram do horário" não é o mesmo que "2,5 milhões votaram depois das 17h". Quem estava numa seção que fechou às 19h pode ter votado às 9h da manhã. O TSE informou cerca de 34 mil votos depois das 17h; o boletim não tem o horário de cada voto, então esse número só pode ser conferido nos logs das urnas.</li>
+    <li>Os "83% no Maranhão" se referem a 3 seções, com 634 eleitores.</li>
+  </ul>
+</article>
+
+<!-- ====================================================== -->
+<article class="tese" id="t-bio">
+  <div class="tese-cab">
+    <div class="meta"><span class="label">Relatório pericial · capítulo 3</span><span class="key corrige">Corrige</span></div>
+    <h2>"8,6 milhões votaram sem biometria, quase o dobro da margem"</h2>
+  </div>
+  <p class="dizem">8.632.488 eleitores foram liberados sem biometria, só com o ano de nascimento. Isso é quase o dobro da diferença entre os candidatos, e onde a liberação manual é maior, Lula tem mais votos.</p>
+  <div class="curta"><div class="topo"><span class="label">Resposta curta</span><button class="copiar" type="button">Copiar</button></div>
+    <p>O número está certo e é normal: em 2022 foram 10 milhões e em 2018, quando Bolsonaro venceu, 7,9 milhões. São eleitores identificados pelo mesário com documento depois que a digital falhou, e o voto deles se divide entre os dois candidatos. Comparando seções do mesmo município, a relação com o voto em Lula é zero.</p></div>
+  <div class="tabela"><table>
+    <thead><tr><th>2º turno</th><th class="n">Liberados sem biometria</th><th class="n">% do comparecimento</th><th class="n">Correlação com voto no 13</th><th class="n">Mesma correlação, dentro do município</th></tr></thead>
+    <tbody>
+      <tr><td>2018 (13 perdeu)</td><td class="n">7.898.943</td><td class="n">6,81%</td><td class="n">0,17</td><td class="n">0,02</td></tr>
+      <tr><td>2022</td><td class="n">10.011.347</td><td class="n">8,06%</td><td class="n">0,15</td><td class="n">−0,01</td></tr>
+      <tr class="destaque"><td>2026</td><td class="n">8.632.488</td><td class="n">6,73%</td><td class="n">0,06</td><td class="n">0,01</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Por que isso acontece</h3>
+  <ul class="pq">
+    <li>Pela definição do próprio TSE, o campo conta "eleitores com biometria, mas que não foram habilitados por meio dela". É o procedimento regulamentar quando a leitura da digital falha, e o eleitor continua identificado pelo documento e pelo título.</li>
+    <li>A liberação manual é mais comum no Nordeste. Uma hipótese plausível é o eleitorado mais velho e com digitais desgastadas por trabalho manual. O Nordeste também vota mais em Lula, e isso gera a correlação fraca no agregado. Quando se comparam seções vizinhas, ela desaparece.</li>
+    <li>Comparar liberações com a margem não faz sentido: seria como dizer que os eleitores de óculos são o dobro da margem. São votos legítimos, dos dois lados.</li>
+  </ul>
+</article>
+
+<!-- ====================================================== -->
+<article class="tese" id="t-unan">
+  <div class="tese-cab">
+    <div class="meta"><span class="label">Relatório pericial · capítulo 4</span><span class="key branco">Branco</span></div>
+    <h2>"Seções com mais de 90% para Lula, 18 para cada uma do Flávio"</h2>
+  </div>
+  <p class="dizem">Há 106 seções com 100% dos votos para Lula e só 4 para Flávio. Acima de 90%, são 6.899 contra 384, uma desproporção de 18 para 1.</p>
+  <div class="curta"><div class="topo"><span class="label">Resposta curta</span><button class="copiar" type="button">Copiar</button></div>
+    <p>Os números estão certos e a desproporção é antiga. Em 2018, quando Haddad perdeu por 10,7 milhões de votos, ele teve 328 seções com 100%, contra 4 de Bolsonaro. Em 2022 a razão acima de 90% foi de 43 para 1, mais desigual que agora.</p></div>
+  <div class="tabela"><table>
+    <thead><tr><th>2º turno</th><th class="n">100% para o 13</th><th class="n">100% para o adversário</th><th class="n">≥ 90% para o 13</th><th class="n">≥ 90% para o adversário</th><th class="n">Razão</th></tr></thead>
+    <tbody>
+      <tr><td>2018 (13 perdeu)</td><td class="n">328</td><td class="n">4</td><td class="n">15.133</td><td class="n">1.328</td><td class="n">11:1</td></tr>
+      <tr><td>2022</td><td class="n">143</td><td class="n">4</td><td class="n">9.538</td><td class="n">220</td><td class="n">43:1</td></tr>
+      <tr class="destaque"><td>2026</td><td class="n">106</td><td class="n">4</td><td class="n">6.899</td><td class="n">384</td><td class="n">18:1</td></tr>
+    </tbody>
+  </table></div>
+  <p>Os redutos do PT no interior do Maranhão, Bahia, Piauí e Ceará são historicamente muito homogêneos. Os redutos bolsonaristas, no Sul e no Centro-Oeste, raramente passam de 80% a 85%. As seções com 100% são pequenas (mediana de 122 votos). O voto por seção não tem por que seguir uma curva normal, porque reflete a geografia social do país.</p>
+</article>
+
+<!-- ====================================================== -->
+<article class="tese" id="t-benford">
+  <div class="tese-cab">
+    <div class="meta"><span class="label">Relatório pericial · capítulo 5</span><span class="key semdado">Sem resultado</span></div>
+    <h2>"A Lei de Benford mostra manipulação"</h2>
+  </div>
+  <div class="curta"><div class="topo"><span class="label">Resposta curta</span><button class="copiar" type="button">Copiar</button></div>
+    <p>O próprio relatório diz que fez o teste, mas não mostra resultado nenhum. E esse teste não serve para contagens de votos por seção: as seções têm entre 50 e 500 eleitores, o que distorce os primeiros dígitos sem qualquer fraude. A literatura acadêmica documenta falsos positivos e falsos negativos nesse uso.</p></div>
+</article>
+
+<!-- ====================================================== -->
+<article class="tese" id="t-72h">
+  <div class="tese-cab">
+    <div class="meta"><span class="label">Relatório pericial · introdução</span><span class="key corrige">Corrige</span></div>
+    <h2>"Os dados foram escondidos por 72 horas"</h2>
+  </div>
+  <p class="dizem">Os boletins de urna só foram liberados na quarta-feira, 28 de outubro. Durante 72 horas a sociedade ficou sem acesso aos dados.</p>
+  <div class="curta"><div class="topo"><span class="label">Resposta curta</span><button class="copiar" type="button">Copiar</button></div>
+    <p>Todos os boletins chegaram à totalização até as 23h21 do domingo, e cada um é impresso e afixado na porta da seção quando a votação termina. Os arquivos de dados abertos foram gerados na segunda às 7h42, e o catálogo do portal foi atualizado na terça às 19h22, antes de quarta.</p></div>
+</article>
+
+<!-- ====================================================== -->
+<article class="tese" id="t-turnos">
+  <div class="tese-cab">
+    <div class="meta"><span class="label">Outras teses</span><span class="key corrige">Corrige</span></div>
+    <h2>"É matematicamente impossível Lula ganhar tantos votos do 1º para o 2º turno"</h2>
+  </div>
+  <p class="dizem">Lula ganhou 10,4 milhões de votos entre os turnos, mais do que a soma de todos os outros candidatos (9,3 milhões), que ainda eram quase todos de direita.</p>
+  <div class="curta"><div class="topo"><span class="label">Resposta curta</span><button class="copiar" type="button">Copiar</button></div>
+    <p>A conta fecha voto a voto. Além dos 9,3 milhões dos outros candidatos, 1,8 milhão deixaram de votar branco ou nulo e 3 milhões a mais foram votar no 2º turno: 14,1 milhões no total, exatamente o que os dois candidatos cresceram somados. Lula ficou com 73,6% desse estoque. Em 2022 Bolsonaro ficou com 69,8%, e ninguém chamou aquilo de impossível.</p></div>
+  <figure>
+    <figcaption>Parte dos votos disponíveis entre os turnos que ficou com o candidato que mais cresceu</figcaption>
+    <div class="grafico" id="g-estoque"></div>
+  </figure>
+  <div class="tabela"><table>
+    <thead><tr><th>2026</th><th class="n">1º turno</th><th class="n">2º turno</th><th class="n">Variação</th></tr></thead>
+    <tbody>
+      <tr><td>Lula</td><td class="n">53.879.538</td><td class="n">64.256.232</td><td class="n">+10.376.694</td></tr>
+      <tr><td>Flávio</td><td class="n">56.104.503</td><td class="n">59.826.041</td><td class="n">+3.721.538</td></tr>
+      <tr><td>Outros candidatos</td><td class="n">9.321.993</td><td class="n">—</td><td class="n">−9.321.993</td></tr>
+      <tr><td>Brancos e nulos</td><td class="n">5.969.801</td><td class="n">4.153.801</td><td class="n">−1.816.000</td></tr>
+      <tr><td>Comparecimento</td><td class="n">125.275.835</td><td class="n">128.236.074</td><td class="n">+2.960.239</td></tr>
+    </tbody>
+  </table></div>
+  <h3>De onde vieram os votos de Lula</h3>
+  <p>Estimativa feita comparando as mesmas seções nos dois turnos (regressão ecológica, estado por estado). Cada linha mostra para onde foi, em média, cada grupo de eleitores do 1º turno.</p>
+  <div class="tabela"><table>
+    <thead><tr><th>No 1º turno votou em</th><th class="n">Eleitores</th><th class="n">→ Lula</th><th class="n">→ Flávio</th><th class="n">→ branco/nulo</th></tr></thead>
+    <tbody>
+      <tr><td>Augusto Cury</td><td class="n">3,44 mi</td><td class="n">56%</td><td class="n">31%</td><td class="n">12%</td></tr>
+      <tr><td>Renan Santos</td><td class="n">2,67 mi</td><td class="n">40%</td><td class="n">37%</td><td class="n">16%</td></tr>
+      <tr><td>Ronaldo Caiado</td><td class="n">2,60 mi</td><td class="n">40%</td><td class="n">55%</td><td class="n">11%</td></tr>
+      <tr><td>Zema</td><td class="n">0,32 mi</td><td class="n">0%</td><td class="n">86%</td><td class="n">14%</td></tr>
+      <tr><td>Branco ou nulo</td><td class="n">5,96 mi</td><td class="n">61%</td><td class="n">8%</td><td class="n">38%</td></tr>
+      <tr><td>Não votou</td><td class="n">32,9 mi</td><td class="n">9,5%</td><td class="n">3,7%</td><td class="n">0%</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="pq">
+    <li>A premissa escondida da tese é que eleitor de candidato de direita vai todo para o Flávio. Os dados mostram que os eleitores de Caiado e de Renan Santos se dividiram, e os de Cury foram mais para Lula.</li>
+    <li>O maior saldo de Lula veio de quem votou branco, nulo ou não votou no 1º turno.</li>
+    <li>Em apenas 10 das 497.897 seções o ganho de Lula passa de tudo o que estava disponível naquela seção (votos de outros candidatos, brancos, nulos e abstenções do 1º turno). Somadas, essas 10 seções dão 20 votos de excesso. Em 2022 foram 6 seções.</li>
+  </ul>
+  <p class="ressalva">Os percentuais da tabela são estimativas estatísticas, não contagens. O de brancos e nulos indo para Lula (61%) é o mais incerto, porque branco, nulo e abstenção são mais comuns justamente onde Lula é forte. A resposta não depende dele: depende de a conta fechar seção por seção e do espelho de 2022. Se o critério ignorar quem votou num turno e faltou no outro, o ganho de Lula supera o disponível em 1,3% das seções em 2026; em 2022 o de Bolsonaro superou em 0,7%. É o mesmo fenômeno de eleitores trocando de lado, um pouco mais forte agora.</p>
+</article>
+
+<!-- ====================================================== -->
+<article class="tese" id="t-virada">
+  <div class="tese-cab">
+    <div class="meta"><span class="label">Outras teses</span><span class="key branco">Branco</span></div>
+    <h2>"A virada às 20h24 é suspeita"</h2>
+  </div>
+  <p class="dizem">Flávio liderava a apuração e, de repente, às 20h24, Lula passou à frente e não saiu mais.</p>
+  <div class="curta"><div class="topo"><span class="label">Resposta curta</span><button class="copiar" type="button">Copiar</button></div>
+    <p>A virada aconteceu com 47% das urnas apuradas. Em 2022 Lula também virou, e mais tarde, com 68% das urnas. Nos dois anos, dentro de cada estado, os últimos boletins a chegar votam uns 2 pontos a mais no 13. É um padrão da apuração, não de 2026.</p></div>
+  <figure>
+    <figcaption>% acumulado dos votos válidos do 13 conforme os boletins chegam à totalização</figcaption>
+    <div class="grafico" id="g-apur"></div>
+    <div class="legenda"><span><i style="background:var(--s2026)"></i>2026</span><span><i style="background:var(--s2022)"></i>2022</span></div>
+  </figure>
+  <ul class="pq">
+    <li>O Nordeste não chegou por último: a mediana de chegada dos boletins foi 20h27 no Nordeste e 20h25 no resto do país.</li>
+    <li>Os boletins que chegam por último em cada estado vêm de seções que fecharam mais tarde, com fila, e de áreas mais distantes. Esse grupo vota um pouco mais no 13: 53,1% contra 50,9% dos primeiros em 2026, e 52,3% contra 50,0% em 2022.</li>
+    <li>Em 2026 a apuração só ganhou volume depois das 19h, por causa da prorrogação.</li>
+  </ul>
+</article>
+
+<!-- ====================================================== -->
+<article class="tese" id="t-comp">
+  <div class="tese-cab">
+    <div class="meta"><span class="label">Outras teses</span><span class="key corrige">Corrige</span></div>
+    <h2>"Há seções com comparecimento impossível"</h2>
+  </div>
+  <div class="curta"><div class="topo"><span class="label">Resposta curta</span><button class="copiar" type="button">Copiar</button></div>
+    <p>Nenhuma seção teve mais votantes que eleitores aptos, nem em 2018, nem em 2022, nem em 2026. As 12 seções com abstenção zero em 2026 são minúsculas, com mediana de 57 eleitores.</p></div>
+  <div class="tabela"><table>
+    <thead><tr><th>2º turno</th><th class="n">Mais votantes que aptos</th><th class="n">Abstenção zero</th><th class="n">Comparecimento ≥ 98%</th><th class="n">Comparecimento médio</th></tr></thead>
+    <tbody>
+      <tr><td>2018</td><td class="n">0</td><td class="n">10</td><td class="n">35</td><td class="n">78,8%</td></tr>
+      <tr><td>2022</td><td class="n">0</td><td class="n">4</td><td class="n">16</td><td class="n">79,6%</td></tr>
+      <tr class="destaque"><td>2026</td><td class="n">0</td><td class="n">12</td><td class="n">66</td><td class="n">81,0%</td></tr>
+    </tbody>
+  </table></div>
+</article>
+
+<!-- ====================================================== -->
+<article class="tese" id="t-zero">
+  <div class="tese-cab">
+    <div class="meta"><span class="label">Outras teses</span><span class="key branco">Branco</span></div>
+    <h2>"Há seções com zero votos para Flávio"</h2>
+  </div>
+  <div class="curta"><div class="topo"><span class="label">Resposta curta</span><button class="copiar" type="button">Copiar</button></div>
+    <p>São 106 seções, contra 143 sem voto em Bolsonaro em 2022 e 328 em 2018. Ficam principalmente em áreas indígenas do Alto Solimões, no Amazonas, e no interior do Maranhão e do Pará. Flávio já tinha praticamente zero nelas no 1º turno: 118 votos somando as 106.</p></div>
+</article>
+
+<!-- ====================================================== -->
+<article class="tese" id="t-redutos">
+  <div class="tese-cab">
+    <div class="meta"><span class="label">Outras teses</span><span class="key corrige">Corrige</span></div>
+    <h2>"O comparecimento cresceu só nos redutos de Lula"</h2>
+  </div>
+  <div class="curta"><div class="topo"><span class="label">Resposta curta</span><button class="copiar" type="button">Copiar</button></div>
+    <p>O comparecimento subiu quase igual em todo o país: 1,5 ponto nos redutos de Flávio e 1,6 nos de Lula. O maior aumento em número de eleitores foi em São Paulo, mais 932 mil, estado que Flávio venceu.</p></div>
+  <figure>
+    <figcaption>Aumento do comparecimento do 1º para o 2º turno de 2026, em pontos percentuais. Seções divididas em dez grupos iguais pelo voto em Lula no 1º turno, do mais pró-Flávio ao mais pró-Lula.</figcaption>
+    <div class="grafico" id="g-decil"></div>
+  </figure>
+</article>
+
+<!-- ====================================================== -->
+<article class="tese" id="t-antigas">
+  <div class="tese-cab">
+    <div class="meta"><span class="label">Outras teses</span><span class="key corrige">Corrige</span></div>
+    <h2>"As urnas antigas votaram mais em Lula"</h2>
+  </div>
+  <p class="dizem">Tese do relatório do PL em 2022: urnas de modelos anteriores a 2020 deram mais votos a Lula do que as novas.</p>
+  <div class="curta"><div class="topo"><span class="label">Resposta curta</span><button class="copiar" type="button">Copiar</button></div>
+    <p>As urnas antigas estavam mais no Nordeste e no interior. Comparando urnas antigas e novas no mesmo local de votação, a diferença cai a quase zero em 2022. Em 2026 ela não existe nem no total.</p></div>
+  <div class="tabela"><table>
+    <thead><tr><th>Diferença no % do 13, antigas menos novas</th><th class="n">Brasil todo</th><th class="n">Mesmo município</th><th class="n">Mesmo local de votação</th></tr></thead>
+    <tbody>
+      <tr><td>2022</td><td class="n">+3,45 pontos</td><td class="n">+1,03</td><td class="n">+0,19</td></tr>
+      <tr class="destaque"><td>2026</td><td class="n">+0,51 pontos</td><td class="n">−0,21</td><td class="n">+0,37</td></tr>
+    </tbody>
+  </table></div>
+  <p class="ressalva">O modelo foi deduzido pela numeração de série das urnas, calibrada com os registros das urnas do Acre. Poucos locais de votação misturam urnas antigas e novas (cerca de 1.700 seções em 2022), então a comparação por município é a mais robusta.</p>
+</article>
+
+<!-- ====================================================== -->
+<article class="tese" id="t-trocadas">
+  <div class="tese-cab">
+    <div class="meta"><span class="label">Outras teses</span><span class="key corrige">Corrige</span></div>
+    <h2>"Urnas foram trocadas no meio da votação"</h2>
+  </div>
+  <div class="curta"><div class="topo"><span class="label">Resposta curta</span><button class="copiar" type="button">Copiar</button></div>
+    <p>O TSE publica antes da eleição qual urna vai para cada seção. Em 99,4% das seções foi usada exatamente a urna prevista. As trocas foram feitas com urnas de reserva previstas na mesma lista, e as seções com urna trocada votaram um pouco menos em Lula do que o próprio município.</p></div>
+  <div class="tabela"><table>
+    <thead><tr><th>Urna usada na seção</th><th class="n">Seções</th><th class="n">% Lula</th></tr></thead>
+    <tbody>
+      <tr><td>A urna prevista, com a carga prevista</td><td class="n">496.138</td><td class="n">51,78</td></tr>
+      <tr><td>Urna de reserva da própria zona</td><td class="n">2.267</td><td class="n">51,49</td></tr>
+      <tr><td>Urna de reserva de outra zona</td><td class="n">632</td><td class="n">52,14</td></tr>
+      <tr><td>Sem explicação pelas listas</td><td class="n">168</td><td class="n">—</td></tr>
+    </tbody>
+  </table></div>
+  <p>As 168 seções sem explicação somam 37.639 eleitores e um saldo de 4.835 votos para Lula, 0,1% da margem. Das 39 que não constavam na lista, 27 são do exterior. A explicação mais provável é que essas urnas foram preparadas depois que a lista foi gerada, na véspera da eleição. Isso pode ser confirmado nos registros (logs) das urnas.</p>
+</article>
+
+<!-- ====================================================== -->
+<section class="stack" aria-labelledby="limites">
+  <h2 id="limites">O que esta checagem não prova</h2>
+  <p>Os boletins de urna não permitem auditar cada voto, e o voto é secreto. O que a checagem mostra é que nenhum dos padrões apresentados como prova de fraude é, de fato, evidência de fraude: todos aparecem também em eleições anteriores, se explicam por geografia, fuso e filas, ou são pequenos demais para mudar o resultado. Ela não prova que fraude é impossível em geral. Para isso existem outros mecanismos, como os testes de integridade das urnas, a auditoria dos códigos e os registros (logs) de cada urna.</p>
+  <p>Ainda em aberto: a contagem exata de votos depois das 17h e das 19h, e as 168 seções sem explicação pelas listas, que dependem da análise dos logs das urnas.</p>
+</section>
+
+<section class="stack" aria-labelledby="conversa">
+  <h2 id="conversa">Para conversar</h2>
+  <ul class="pq">
+    <li>Comece concordando com o que é verdade. Muitos números desses posts estão certos; o erro está no que se conclui deles. Dizer isso abre mais a conversa do que chamar tudo de mentira.</li>
+    <li>Pergunte se o mesmo padrão aparece em 2022 ou em 2018. Quase sempre aparece, e quase sempre isso basta.</li>
+    <li>Peça o tamanho do efeito. A diferença foi de 4,43 milhões de votos; qualquer suspeita precisa chegar perto desse número.</li>
+  </ul>
+</section>
+
+<footer>
+  <p><strong>Como foi feito.</strong> Análise de 28/10/2026 com os boletins de urna oficiais (arquivos BWeb) do 1º e do 2º turno de 2026, do 1º e 2º turno de 2022 e do 2º turno de 2018, além da lista de urnas por seção do 2º turno de 2026. Todos os arquivos foram conferidos pelo código de integridade (SHA-512) publicado pelo TSE, e os totais reconstruídos batem exatamente com o resultado oficial. Os registros (logs) completos das urnas, com cerca de 134 GB, ainda não foram analisados.</p>
+  <ul>
+    <li><a href="https://dadosabertos.tse.jus.br/dataset/resultados-2026-boletim-de-urna" rel="noopener">TSE · Dados abertos: boletins de urna 2026</a></li>
+    <li><a href="https://dadosabertos.tse.jus.br/dataset/resultados-2022-boletim-de-urna" rel="noopener">TSE · Dados abertos: boletins de urna 2022</a></li>
+    <li><a href="https://dadosabertos.tse.jus.br/dataset/resultados-2018-boletim-de-urna" rel="noopener">TSE · Dados abertos: boletins de urna 2018</a></li>
+    <li><a href="https://www.tse.jus.br/comunicacao/noticias/2026/Outubro/presidente-do-tse-anuncia-reeleicao-de-lula-e-faz-balanco-do-2o-turno-das-eleicoes-2026" rel="noopener">TSE · Anúncio do resultado do 2º turno</a></li>
+    <li><a href="https://www.poder360.com.br/integras/leia-a-integra-da-decisao-de-zanin-que-prorroga-votacao-ate-as-19h/" rel="noopener">Poder360 · Íntegra da decisão que prorrogou a votação até as 19h</a></li>
+    <li><a href="https://conjur.com.br/2026-out-25/crise-dos-onibus-faz-zanin-prorrogar-eleicoes-ate-as-19h-em-todo-o-brasil/" rel="noopener">Conjur · A crise dos ônibus que motivou a prorrogação</a></li>
+  </ul>
+</footer>
+</main>
+
+<script>
+const DADOS = {"gradiente":{"2018":[[0,205465,44.74],[1,112850,45.17],[2,56524,44.68],[3,30935,44.68],[4,17559,44.51],[5,11175,44.97],[6,6478,45.27],[7,4034,45.77],[8,2610,46.17],[9,1709,46.32],[10,1167,47.02],[11,716,47.89],[12,522,46.49],[13,366,47.29],[14,314,48.48],[15,214,45.13]],"2022":[[0,175554,50.06],[1,117541,50.81],[2,66832,51.05],[3,39895,51.44],[4,24739,51.89],[5,16077,52.17],[6,9880,52.48],[7,6324,52.64],[8,4235,52.84],[9,2817,53.82],[10,1930,54.35],[11,1284,54.75],[12,861,54.38],[13,627,55.15],[14,471,54.86],[15,379,56.09]],"2026":[[0,125624,49.01],[1,154492,51.15],[2,83154,52.19],[3,47920,53.12],[4,29272,54.09],[5,18848,55.31],[6,11574,55.99],[7,6902,56.43],[8,4206,57.35],[9,2523,57.87],[10,1709,59.36],[11,1087,58.94],[12,691,59.71],[13,464,59.57],[14,337,59.2],[15,249,59.08]]},"apuracao":{"2022":{"pts":[[1.0,43.567,"17:13"],[1.5,43.6,"17:15"],[2.0,43.907,"17:17"],[2.5,44.598,"17:19"],[3.0,45.242,"17:20"],[3.5,45.634,"17:21"],[4.0,46.033,"17:22"],[4.5,46.266,"17:24"],[5.0,46.627,"17:25"],[5.5,46.821,"17:25"],[6.0,46.985,"17:26"],[6.5,47.221,"17:27"],[7.0,47.335,"17:28"],[7.5,47.422,"17:28"],[8.0,47.604,"17:29"],[8.5,47.738,"17:30"],[9.0,47.868,"17:31"],[9.5,47.963,"17:32"],[10.0,47.989,"17:32"],[10.5,47.995,"17:33"],[11.0,48.041,"17:34"],[11.5,48.101,"17:35"],[12.0,48.172,"17:36"],[12.5,48.215,"17:36"],[13.0,48.234,"17:37"],[13.5,48.266,"17:38"],[14.0,48.3,"17:39"],[14.5,48.323,"17:40"],[15.0,48.346,"17:41"],[15.5,48.355,"17:41"],[16.0,48.347,"17:42"],[16.5,48.341,"17:43"],[17.0,48.372,"17:43"],[17.5,48.392,"17:44"],[18.0,48.364,"17:45"],[18.5,48.375,"17:45"],[19.0,48.414,"17:46"],[19.5,48.461,"17:47"],[20.0,48.438,"17:48"],[20.5,48.497,"17:48"],[21.0,48.53,"17:49"],[21.5,48.529,"17:50"],[22.0,48.573,"17:50"],[22.5,48.599,"17:51"],[23.0,48.658,"17:52"],[23.5,48.678,"17:52"],[24.0,48.707,"17:53"],[24.5,48.735,"17:54"],[25.0,48.75,"17:54"],[25.5,48.753,"17:55"],[26.0,48.772,"17:56"],[26.5,48.8,"17:57"],[27.0,48.839,"17:57"],[27.5,48.865,"17:58"],[28.0,48.89,"17:59"],[28.5,48.909,"17:59"],[29.0,48.931,"18:00"],[29.5,48.949,"18:01"],[30.0,48.944,"18:01"],[30.5,48.952,"18:02"],[31.0,48.965,"18:03"],[31.5,49.004,"18:03"],[32.0,49.06,"18:04"],[32.5,49.1,"18:05"],[33.0,49.114,"18:06"],[33.5,49.13,"18:06"],[34.0,49.143,"18:07"],[34.5,49.156,"18:07"],[35.0,49.178,"18:08"],[35.5,49.199,"18:09"],[36.0,49.21,"18:10"],[36.5,49.232,"18:10"],[37.0,49.254,"18:11"],[37.5,49.269,"18:12"],[38.0,49.273,"18:12"],[38.5,49.286,"18:13"],[39.0,49.304,"18:14"],[39.5,49.327,"18:14"],[40.0,49.343,"18:15"],[40.5,49.361,"18:15"],[41.0,49.368,"18:16"],[41.5,49.394,"18:16"],[42.0,49.401,"18:17"],[42.5,49.417,"18:17"],[43.0,49.44,"18:18"],[43.5,49.459,"18:19"],[44.0,49.47,"18:19"],[44.5,49.495,"18:20"],[45.0,49.516,"18:21"],[45.5,49.541,"18:21"],[46.0,49.564,"18:22"],[46.5,49.578,"18:22"],[47.0,49.602,"18:23"],[47.5,49.619,"18:23"],[48.0,49.637,"18:24"],[48.5,49.665,"18:24"],[49.0,49.68,"18:25"],[49.5,49.69,"18:25"],[50.0,49.693,"18:26"],[50.5,49.696,"18:26"],[51.0,49.707,"18:27"],[51.5,49.727,"18:27"],[52.0,49.744,"18:28"],[52.5,49.764,"18:28"],[53.0,49.773,"18:29"],[53.5,49.782,"18:29"],[54.0,49.8,"18:30"],[54.5,49.805,"18:30"],[55.0,49.813,"18:30"],[55.5,49.809,"18:31"],[56.0,49.813,"18:31"],[56.5,49.824,"18:32"],[57.0,49.838,"18:32"],[57.5,49.848,"18:33"],[58.0,49.863,"18:34"],[58.5,49.88,"18:34"],[59.0,49.886,"18:34"],[59.5,49.887,"18:35"],[60.0,49.887,"18:35"],[60.5,49.894,"18:36"],[61.0,49.901,"18:36"],[61.5,49.911,"18:37"],[62.0,49.92,"18:37"],[62.5,49.923,"18:38"],[63.0,49.923,"18:38"],[63.5,49.925,"18:39"],[64.0,49.928,"18:39"],[64.5,49.941,"18:40"],[65.0,49.954,"18:40"],[65.5,49.969,"18:41"],[66.0,49.974,"18:41"],[66.5,49.981,"18:42"],[67.0,49.987,"18:42"],[67.5,49.996,"18:43"],[68.0,50.012,"18:43"],[68.5,50.019,"18:44"],[69.0,50.028,"18:45"],[69.5,50.038,"18:45"],[70.0,50.046,"18:45"],[70.5,50.058,"18:46"],[71.0,50.074,"18:46"],[71.5,50.083,"18:47"],[72.0,50.096,"18:47"],[72.5,50.11,"18:48"],[73.0,50.118,"18:48"],[73.5,50.13,"18:49"],[74.0,50.147,"18:49"],[74.5,50.158,"18:50"],[75.0,50.175,"18:51"],[75.5,50.189,"18:51"],[76.0,50.199,"18:52"],[76.5,50.213,"18:52"],[77.0,50.222,"18:53"],[77.5,50.231,"18:53"],[78.0,50.244,"18:54"],[78.5,50.257,"18:54"],[79.0,50.271,"18:55"],[79.5,50.287,"18:55"],[80.0,50.301,"18:56"],[80.5,50.313,"18:56"],[81.0,50.322,"18:57"],[81.5,50.333,"18:57"],[82.0,50.344,"18:57"],[82.5,50.354,"18:58"],[83.0,50.37,"18:59"],[83.5,50.38,"18:59"],[84.0,50.393,"18:59"],[84.5,50.404,"19:00"],[85.0,50.415,"19:01"],[85.5,50.427,"19:01"],[86.0,50.435,"19:02"],[86.5,50.452,"19:03"],[87.0,50.464,"19:03"],[87.5,50.478,"19:04"],[88.0,50.49,"19:05"],[88.5,50.505,"19:06"],[89.0,50.512,"19:06"],[89.5,50.524,"19:07"],[90.0,50.531,"19:09"],[90.5,50.543,"19:09"],[91.0,50.557,"19:11"],[91.5,50.572,"19:12"],[92.0,50.585,"19:13"],[92.5,50.594,"19:14"],[93.0,50.605,"19:16"],[93.5,50.621,"19:18"],[94.0,50.635,"19:19"],[94.5,50.646,"19:21"],[95.0,50.66,"19:23"],[95.5,50.673,"19:25"],[96.0,50.69,"19:25"],[96.5,50.705,"19:26"],[97.0,50.721,"19:30"],[97.5,50.744,"19:36"],[98.0,50.771,"19:41"],[98.5,50.805,"19:49"],[99.0,50.836,"20:00"],[99.5,50.875,"20:19"],[100.0,50.902,"00:17"]],"virada_pct":67.62,"virada_hora":"18:43"},"2026":{"pts":[[1.0,52.792,"19:03"],[1.5,52.283,"19:03"],[2.0,51.853,"19:16"],[2.5,51.579,"19:19"],[3.0,51.394,"19:22"],[3.5,51.283,"19:24"],[4.0,51.221,"19:25"],[4.5,51.189,"19:27"],[5.0,51.166,"19:28"],[5.5,51.019,"19:29"],[6.0,50.896,"19:30"],[6.5,50.858,"19:31"],[7.0,50.831,"19:32"],[7.5,50.752,"19:33"],[8.0,50.695,"19:34"],[8.5,50.625,"19:35"],[9.0,50.555,"19:36"],[9.5,50.477,"19:37"],[10.0,50.482,"19:38"],[10.5,50.442,"19:38"],[11.0,50.39,"19:39"],[11.5,50.354,"19:40"],[12.0,50.32,"19:41"],[12.5,50.259,"19:42"],[13.0,50.159,"19:43"],[13.5,50.01,"19:44"],[14.0,49.963,"19:45"],[14.5,49.961,"19:46"],[15.0,49.926,"19:46"],[15.5,49.886,"19:47"],[16.0,49.813,"19:51"],[16.5,49.78,"19:52"],[17.0,49.765,"19:52"],[17.5,49.722,"19:53"],[18.0,49.68,"19:54"],[18.5,49.657,"19:54"],[19.0,49.631,"19:55"],[19.5,49.573,"19:56"],[20.0,49.591,"19:56"],[20.5,49.54,"19:57"],[21.0,49.504,"19:58"],[21.5,49.509,"19:58"],[22.0,49.532,"19:59"],[22.5,49.538,"20:00"],[23.0,49.516,"20:00"],[23.5,49.517,"20:01"],[24.0,49.522,"20:01"],[24.5,49.498,"20:02"],[25.0,49.481,"20:02"],[25.5,49.507,"20:03"],[26.0,49.539,"20:03"],[26.5,49.549,"20:04"],[27.0,49.537,"20:04"],[27.5,49.56,"20:05"],[28.0,49.557,"20:05"],[28.5,49.553,"20:06"],[29.0,49.538,"20:06"],[29.5,49.544,"20:07"],[30.0,49.549,"20:07"],[30.5,49.539,"20:08"],[31.0,49.555,"20:08"],[31.5,49.557,"20:09"],[32.0,49.561,"20:09"],[32.5,49.586,"20:10"],[33.0,49.61,"20:10"],[33.5,49.633,"20:11"],[34.0,49.649,"20:11"],[34.5,49.679,"20:12"],[35.0,49.701,"20:12"],[35.5,49.693,"20:13"],[36.0,49.678,"20:13"],[36.5,49.68,"20:13"],[37.0,49.693,"20:14"],[37.5,49.695,"20:14"],[38.0,49.703,"20:15"],[38.5,49.72,"20:15"],[39.0,49.742,"20:16"],[39.5,49.76,"20:16"],[40.0,49.783,"20:17"],[40.5,49.802,"20:17"],[41.0,49.808,"20:18"],[41.5,49.826,"20:18"],[42.0,49.832,"20:19"],[42.5,49.849,"20:19"],[43.0,49.855,"20:20"],[43.5,49.859,"20:20"],[44.0,49.875,"20:21"],[44.5,49.899,"20:21"],[45.0,49.92,"20:22"],[45.5,49.938,"20:22"],[46.0,49.965,"20:22"],[46.5,49.98,"20:23"],[47.0,49.987,"20:23"],[47.5,50.014,"20:24"],[48.0,50.01,"20:24"],[48.5,50.027,"20:25"],[49.0,50.049,"20:25"],[49.5,50.083,"20:25"],[50.0,50.116,"20:26"],[50.5,50.147,"20:26"],[51.0,50.15,"20:27"],[51.5,50.148,"20:27"],[52.0,50.162,"20:28"],[52.5,50.191,"20:28"],[53.0,50.222,"20:28"],[53.5,50.243,"20:29"],[54.0,50.278,"20:29"],[54.5,50.323,"20:30"],[55.0,50.344,"20:30"],[55.5,50.371,"20:31"],[56.0,50.385,"20:31"],[56.5,50.396,"20:31"],[57.0,50.417,"20:32"],[57.5,50.437,"20:32"],[58.0,50.447,"20:33"],[58.5,50.477,"20:33"],[59.0,50.494,"20:34"],[59.5,50.503,"20:34"],[60.0,50.527,"20:34"],[60.5,50.537,"20:35"],[61.0,50.543,"20:35"],[61.5,50.554,"20:36"],[62.0,50.573,"20:36"],[62.5,50.583,"20:37"],[63.0,50.625,"20:37"],[63.5,50.653,"20:37"],[64.0,50.687,"20:38"],[64.5,50.704,"20:38"],[65.0,50.727,"20:39"],[65.5,50.76,"20:39"],[66.0,50.794,"20:40"],[66.5,50.829,"20:40"],[67.0,50.846,"20:40"],[67.5,50.854,"20:41"],[68.0,50.867,"20:41"],[68.5,50.888,"20:42"],[69.0,50.904,"20:42"],[69.5,50.901,"20:43"],[70.0,50.912,"20:43"],[70.5,50.921,"20:44"],[71.0,50.936,"20:44"],[71.5,50.956,"20:44"],[72.0,50.986,"20:45"],[72.5,51.001,"20:45"],[73.0,51.015,"20:46"],[73.5,51.03,"20:46"],[74.0,51.052,"20:47"],[74.5,51.069,"20:47"],[75.0,51.082,"20:47"],[75.5,51.1,"20:48"],[76.0,51.125,"20:48"],[76.5,51.145,"20:49"],[77.0,51.175,"20:49"],[77.5,51.189,"20:50"],[78.0,51.202,"20:50"],[78.5,51.216,"20:50"],[79.0,51.23,"20:51"],[79.5,51.252,"20:51"],[80.0,51.268,"20:52"],[80.5,51.292,"20:52"],[81.0,51.316,"20:53"],[81.5,51.336,"20:53"],[82.0,51.358,"20:53"],[82.5,51.375,"20:54"],[83.0,51.375,"20:54"],[83.5,51.393,"20:55"],[84.0,51.407,"20:55"],[84.5,51.41,"20:56"],[85.0,51.427,"20:56"],[85.5,51.437,"20:57"],[86.0,51.445,"20:57"],[86.5,51.452,"20:58"],[87.0,51.471,"20:58"],[87.5,51.493,"20:58"],[88.0,51.508,"20:59"],[88.5,51.521,"20:59"],[89.0,51.528,"21:00"],[89.5,51.541,"21:00"],[90.0,51.563,"21:01"],[90.5,51.577,"21:01"],[91.0,51.596,"21:02"],[91.5,51.619,"21:02"],[92.0,51.627,"21:03"],[92.5,51.652,"21:03"],[93.0,51.668,"21:04"],[93.5,51.684,"21:04"],[94.0,51.694,"21:05"],[94.5,51.704,"21:05"],[95.0,51.717,"21:05"],[95.5,51.725,"21:06"],[96.0,51.73,"21:06"],[96.5,51.73,"21:07"],[97.0,51.737,"21:07"],[97.5,51.741,"21:08"],[98.0,51.747,"21:08"],[98.5,51.755,"21:09"],[99.0,51.747,"21:09"],[99.5,51.748,"21:10"],[100.0,51.785,"23:21"]],"virada_pct":47.18,"virada_hora":"20:23"}}};
+(() => {
+  const NS = "http://www.w3.org/2000/svg";
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const fmt = (v, d = 1) => v.toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d });
+  const el = (tag, attrs = {}, parent) => {
+    const e = document.createElementNS(NS, tag);
+    for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+    if (parent) parent.appendChild(e);
+    return e;
+  };
+  const lin = (d0, d1, r0, r1) => v => r0 + (v - d0) * (r1 - r0) / (d1 - d0);
+
+  // tooltip compartilhado
+  function tipFor(box) {
+    let t = box.querySelector(".tip");
+    if (!t) { t = document.createElement("div"); t.className = "tip"; t.hidden = true; box.appendChild(t); }
+    return t;
+  }
+  function showTip(box, x, y, text) { const t = tipFor(box); t.textContent = text; t.style.left = x + "px"; t.style.top = y + "px"; t.hidden = false; }
+  function hideTip(box) { const t = box.querySelector(".tip"); if (t) t.hidden = true; }
+  function bindMark(box, mark, x, y, text) {
+    mark.setAttribute("tabindex", "0");
+    mark.setAttribute("aria-label", text.replace(/\n/g, ", "));
+    const on = () => showTip(box, x, y, text), off = () => hideTip(box);
+    mark.addEventListener("pointerenter", on); mark.addEventListener("pointerleave", off);
+    mark.addEventListener("focus", on); mark.addEventListener("blur", off);
+  }
+  function svgFor(box, h) {
+    box.querySelectorAll("svg").forEach(s => s.remove());
+    const w = Math.max(280, box.clientWidth);
+    const s = el("svg", { viewBox: `0 0 ${w} ${h}`, role: "img" });
+    box.prepend(s);
+    return [s, w];
+  }
+  function yAxis(s, y, ticks, x0, x1, fmtT) {
+    for (const t of ticks) {
+      el("line", { x1: x0, x2: x1, y1: y(t), y2: y(t), class: "grade" }, s);
+      el("text", { x: x0 - 6, y: y(t) + 4, "text-anchor": "end" }, s).textContent = fmtT(t);
+    }
+  }
+
+  // 1) corte do post: halteres por ano
+  function corte(box) {
+    const rows = [["2018", 44.74, 44.98, "13 perdeu"], ["2022", 48.91, 52.25, "sem prorrogação"], ["2026", 47.61, 53.53, "com prorrogação"]];
+    const h = 190, [s, w] = svgFor(box, h), L = 118, R = w - 20;
+    const x = lin(42, 56, L, R);
+    for (const t of [42, 44, 46, 48, 50, 52, 54, 56]) {
+      el("line", { x1: x(t), x2: x(t), y1: 18, y2: h - 26, class: t === 50 ? "ref" : "grade" }, s);
+      el("text", { x: x(t), y: h - 8, "text-anchor": "middle" }, s).textContent = t + "%";
+    }
+    el("text", { x: x(50) + 4, y: 12, class: "forte" }, s).textContent = "50%";
+    rows.forEach(([ano, a, b, nota], i) => {
+      const yy = 42 + i * 50, cor = css("--s" + ano);
+      el("text", { x: 0, y: yy - 2, class: "forte" }, s).textContent = ano;
+      el("text", { x: 0, y: yy + 13 }, s).textContent = nota;
+      el("line", { x1: x(a), x2: x(b), y1: yy, y2: yy, stroke: cor, "stroke-width": 2 }, s);
+      const d1 = el("circle", { cx: x(a), cy: yy, r: 6, fill: cor, stroke: css("--paper"), "stroke-width": 2 }, s);
+      const d2 = el("circle", { cx: x(b), cy: yy, r: 6, fill: css("--paper"), stroke: cor, "stroke-width": 2.5 }, s);
+      bindMark(box, d1, x(a), yy, `${ano}, "até as 17h"\n13: ${fmt(a, 2)}% · adversário: ${fmt(100 - a, 2)}%`);
+      bindMark(box, d2, x(b), yy, `${ano}, "depois das 17h"\n13: ${fmt(b, 2)}%`);
+    });
+  }
+
+  // 2) gradiente por minuto
+  function grad(box) {
+    const g = DADOS.gradiente, h = 260, [s, w] = svgFor(box, h), L = 40, R = w - 52, T = 14, B = h - 30;
+    const x = lin(0, 15, L, R), y = lin(43, 61, B, T);
+    yAxis(s, y, [45, 50, 55, 60], L, R, t => t + "%");
+    for (const m of [0, 3, 6, 9, 12, 15]) el("text", { x: x(m), y: h - 10, "text-anchor": "middle" }, s).textContent = "17h" + String(m).padStart(2, "0");
+    for (const ano of ["2018", "2022", "2026"]) {
+      const cor = css("--s" + ano), pts = g[ano];
+      el("polyline", { points: pts.map(([m, , p]) => `${x(m)},${y(p)}`).join(" "), fill: "none", stroke: cor, "stroke-width": 2, "stroke-linejoin": "round" }, s);
+      const [mu, , pu] = pts[pts.length - 1];
+      el("text", { x: x(mu) + 6, y: y(pu) + 4, class: "forte" }, s).textContent = ano;
+    }
+    const cruz = el("line", { y1: T, y2: B, class: "cruz", visibility: "hidden" }, s);
+    const alvo = el("rect", { x: L, y: T, width: R - L, height: B - T, class: "alvo" }, s);
+    alvo.addEventListener("pointermove", ev => {
+      const r = s.getBoundingClientRect(), px = (ev.clientX - r.left) * w / r.width;
+      const m = Math.max(0, Math.min(15, Math.round((px - L) / (R - L) * 15)));
+      cruz.setAttribute("x1", x(m)); cruz.setAttribute("x2", x(m)); cruz.setAttribute("visibility", "visible");
+      const linhas = ["2026", "2022", "2018"].map(a => { const p = g[a].find(r => r[0] === m); return p ? `${a}: ${fmt(p[2], 1)}% (${p[1].toLocaleString("pt-BR")} seções)` : ""; });
+      showTip(box, x(m) * r.width / w, T + 10, `Fechou às 17h${String(m).padStart(2, "0")}\n` + linhas.join("\n"));
+    });
+    alvo.addEventListener("pointerleave", () => { cruz.setAttribute("visibility", "hidden"); hideTip(box); });
+  }
+
+  // 3) limite aritmético: barras horizontais
+  function limite(box) {
+    const rows = [["Resultado oficial", 4.430], ["Anulando todas essas seções", 4.151], ["Anulando só os votos de Lula nelas", 3.068], ["Dando todos os votos de Lula delas ao Flávio", 1.706]];
+    const narrow = box.clientWidth < 520, lab = narrow ? 0 : 250;
+    const rowH = narrow ? 54 : 38, h = rows.length * rowH + 34, [s, w] = svgFor(box, h), L = lab, R = w - 70;
+    const x = lin(0, 4.5, L, R);
+    for (const t of [0, 1, 2, 3, 4]) {
+      el("line", { x1: x(t), x2: x(t), y1: 0, y2: h - 24, class: t === 0 ? "eixo" : "grade" }, s);
+      el("text", { x: x(t), y: h - 6, "text-anchor": t === 0 ? "start" : "middle" }, s).textContent = t === 0 ? "empate" : t + " mi";
+    }
+    rows.forEach(([nome, v], i) => {
+      const y0 = i * rowH + (narrow ? 20 : 8), bh = 20;
+      el("text", { x: narrow ? x(0) : 0, y: narrow ? y0 - 5 : y0 + 15, class: i === 0 ? "forte" : "" }, s).textContent = nome;
+      const bar = el("rect", { x: x(0), y: y0, width: x(v) - x(0), height: bh, rx: 3, fill: css("--s2026"), opacity: i === 0 ? 1 : .78 }, s);
+      el("text", { x: x(v) + 6, y: y0 + 15, class: "forte" }, s).textContent = "+" + fmt(v, 2) + " mi";
+      bindMark(box, bar, x(v) / 2 + x(0) / 2, y0, `${nome}\nLula vence por ${fmt(v, 2)} milhões`);
+    });
+  }
+
+  // 4) estoque entre turnos
+  function estoque(box) {
+    const rows = [["2026", "Lula", 73.6, "10,38 de 14,10 mi"], ["2022", "Bolsonaro", 69.8, "7,11 de 10,18 mi"]];
+    const h = 130, [s, w] = svgFor(box, h), L = 0, R = w - 8, x = lin(0, 100, L, R);
+    rows.forEach(([ano, nome, v, det], i) => {
+      const y0 = 22 + i * 52, cor = css("--s" + ano);
+      el("text", { x: 0, y: y0 - 6, class: "forte" }, s).textContent = `${ano}: ${nome} ficou com ${fmt(v, 1)}%`;
+      el("rect", { x: L, y: y0, width: R - L, height: 18, rx: 3, fill: css("--grid") }, s);
+      const b = el("rect", { x: L, y: y0, width: x(v) - L, height: 18, rx: 3, fill: cor }, s);
+      bindMark(box, b, x(v) / 2, y0, `${ano}: ${nome}\n${det} (${fmt(v, 1)}%)`);
+    });
+    el("line", { x1: x(50), x2: x(50), y1: 10, y2: h - 10, class: "ref" }, s);
+    el("text", { x: x(50) + 4, y: h - 2 }, s).textContent = "metade";
+  }
+
+  // 5) curva da apuração
+  function apur(box) {
+    const A = DADOS.apuracao, h = 280, [s, w] = svgFor(box, h), L = 40, R = w - 52, T = 14, B = h - 30;
+    const x = lin(0, 100, L, R), y = lin(42, 56, B, T);
+    yAxis(s, y, [44, 46, 48, 50, 52, 54], L, R, t => t + "%");
+    el("line", { x1: L, x2: R, y1: y(50), y2: y(50), class: "ref" }, s);
+    for (const t of [0, 25, 50, 75, 100]) el("text", { x: x(t), y: h - 10, "text-anchor": "middle" }, s).textContent = t + "%";
+    for (const ano of ["2022", "2026"]) {
+      const cor = css("--s" + ano), pts = A[ano].pts;
+      el("polyline", { points: pts.map(([q, p]) => `${x(q)},${y(Math.max(42, p))}`).join(" "), fill: "none", stroke: cor, "stroke-width": 2, "stroke-linejoin": "round" }, s);
+      const last = pts[pts.length - 1];
+      el("text", { x: x(last[0]) + 6, y: y(last[1]) + (ano === "2026" ? -4 : 12), class: "forte" }, s).textContent = ano;
+      const vq = A[ano].virada_pct, vx = x(vq), vy = y(50);
+      const c = el("circle", { cx: vx, cy: vy, r: 6, fill: cor, stroke: css("--paper"), "stroke-width": 2 }, s);
+      el("text", { x: vx, y: vy + (ano === "2026" ? -12 : 22), "text-anchor": "middle" }, s).textContent = `virada ${A[ano].virada_hora}`;
+      bindMark(box, c, vx, vy, `${ano}: última troca de liderança\n${A[ano].virada_hora}, com ${fmt(vq, 1)}% dos boletins`);
+    }
+    const cruz = el("line", { y1: T, y2: B, class: "cruz", visibility: "hidden" }, s);
+    const alvo = el("rect", { x: L, y: T, width: R - L, height: B - T, class: "alvo" }, s);
+    s.querySelectorAll("circle").forEach(c => s.appendChild(c)); // pontos de virada acima da área de hover
+    alvo.addEventListener("pointermove", ev => {
+      const r = s.getBoundingClientRect(), px = (ev.clientX - r.left) * w / r.width;
+      const q = Math.max(1, Math.min(100, Math.round(((px - L) / (R - L) * 100) * 2) / 2));
+      cruz.setAttribute("x1", x(q)); cruz.setAttribute("x2", x(q)); cruz.setAttribute("visibility", "visible");
+      const linhas = ["2026", "2022"].map(a => { const p = A[a].pts.find(r => r[0] >= q); return `${a}: ${fmt(p[1], 2)}% às ${p[2]}`; });
+      showTip(box, x(q) * r.width / w, T + 10, `${fmt(q, 1)}% dos boletins\n` + linhas.join("\n"));
+    });
+    alvo.addEventListener("pointerleave", () => { cruz.setAttribute("visibility", "hidden"); hideTip(box); });
+  }
+
+  // 6) comparecimento por decil
+  function decil(box) {
+    const v = [1.50, 1.81, 1.87, 1.86, 1.94, 2.00, 2.07, 2.02, 1.80, 1.58];
+    const lula = [20.1, 27.6, 32.2, 36.3, 40.5, 45.1, 50.9, 57.7, 66.6, 79.6];
+    const h = 220, [s, w] = svgFor(box, h), L = 40, R = w - 8, T = 22, B = h - 44;
+    const y = lin(0, 2.5, B, T), bw = (R - L) / 10;
+    yAxis(s, y, [0, 0.5, 1, 1.5, 2, 2.5], L, R, t => "+" + fmt(t, 1));
+    v.forEach((d, i) => {
+      const x0 = L + i * bw + 2;
+      const b = el("rect", { x: x0, y: y(d), width: bw - 4, height: y(0) - y(d), rx: 3, fill: css("--s2026") }, s);
+      bindMark(box, b, x0 + bw / 2, y(d), `Grupo ${i + 1}: Lula teve ${fmt(lula[i], 1)}% no 1º turno\nComparecimento +${fmt(d, 2)} ponto`);
+      if (i === 0 || i === 9) el("text", { x: x0 + (bw - 4) / 2, y: y(d) - 5, "text-anchor": "middle", class: "forte" }, s).textContent = "+" + fmt(d, 2);
+    });
+    el("text", { x: L, y: h - 22 }, s).textContent = "← mais pró-Flávio";
+    el("text", { x: R, y: h - 22, "text-anchor": "end" }, s).textContent = "mais pró-Lula →";
+    el("text", { x: L, y: h - 6 }, s).textContent = `Lula no 1º turno: ${fmt(lula[0], 0)}%`;
+    el("text", { x: R, y: h - 6, "text-anchor": "end" }, s).textContent = `${fmt(lula[9], 0)}%`;
+  }
+
+  const charts = { "g-corte": corte, "g-grad": grad, "g-limite": limite, "g-estoque": estoque, "g-apur": apur, "g-decil": decil };
+  const drawAll = () => { for (const [id, fn] of Object.entries(charts)) { const b = document.getElementById(id); if (b) fn(b); } };
+  drawAll();
+  let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(drawAll, 120); });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", drawAll);
+  new MutationObserver(drawAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  // botões de copiar
+  document.querySelectorAll(".curta").forEach(box => {
+    const btn = box.querySelector("button.copiar"), p = box.querySelector("p");
+    btn.addEventListener("click", async () => {
+      const tese = box.closest(".tese").querySelector("h2").textContent;
+      const texto = `${tese}\n${p.textContent.trim()}\nFonte: boletins de urna oficiais do TSE.`;
+      try { await navigator.clipboard.writeText(texto); btn.textContent = "Copiado"; }
+      catch { const r = document.createRange(); r.selectNodeContents(p); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); btn.textContent = "Selecionado"; }
+      setTimeout(() => (btn.textContent = "Copiar"), 1800);
+    });
+  });
+})();
+</script>
+</body>
+</html>
