@@ -316,6 +316,60 @@ município. As 168 sem explicação somam 37.639 eleitores e um saldo de +4.835 
 da margem. Das 39 seções sem correspondência esperada, 27 são do exterior. A explicação mais provável (não verificada) são urnas preparadas
 depois da geração da lista, em 24/10. Isso pode ser checado nos logs.
 
+## 15. "Lula cresceu 33% em Goiás, estado bolsonarista" — o número é real, a métrica engana
+
+`scripts/16_crescimento_uf.py`; seções pareadas entre os turnos, sem o exterior.
+
+| UF | Lula 1º turno | Terceiros 1º turno | Cresc. Lula | Cresc. adversário | Δ Lula | Δ adversário | Fatia do estoque p/ Lula |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| GO | 31,1% | **15,3%** | **+33,4%** | +14,3% | +397 mil | +293 mil | **57,5%** |
+| PR | 31,2% | 8,9% | +24,9% | +8,8% | +512 mil | +346 mil | 59,7% |
+| SC | 25,0% | 8,3% | +25,8% | +7,3% | +291 mil | +220 mil | 57,0% |
+| BA | 66,2% | 5,3% | +14,5% | +6,8% | +820 mil | +166 mil | 83,2% |
+| PI | 71,0% | 4,9% | +8,6% | +1,7% | +130 mil | +9 mil | 93,7% |
+| Brasil | | | | | | | 73,7% |
+
+- **Crescimento percentual é Δ/base.** Base pequena infla o número: r(voto de Lula no 1º turno,
+  crescimento % de Lula) = −0,45 entre as UFs.
+- **A métrica que mede preferência é a fatia do estoque** (terceiros + queda de brancos/nulos +
+  Δcomparecimento, como na seção 8). Por ela, Lula foi **pior** em Goiás (57,5%) do que no Brasil
+  (73,7%), e a fatia acompanha a força prévia de Lula quase perfeitamente: r = +0,90 (21 UFs em que os
+  dois candidatos cresceram; em RR, AC, TO, AP, AM e MA o adversário perdeu votos e a razão não tem
+  leitura direta). Candidato herda estoque onde já é forte. Fraude "em estado bolsonarista" deveria
+  produzir o padrão oposto.
+- **Goiás é o estado de Caiado**, com o maior estoque de terceiros do país (15,3% no 1º turno). Pela
+  regressão da seção 8, o eleitor de Caiado se dividiu (≈40% Lula, 55% Flávio).
+- **Espelho de 2022:** Bolsonaro cresceu +14,8% no PI, +15,1% na BA e +18,6% no CE, contra +2,2%,
+  +3,8% e +6,4% de Lula nesses mesmos estados. Ninguém chamou aquilo de fraude.
+
+## 16. Vídeo do "algoritmo que penaliza Bolsonaro" (live de 2022, repostada em 2026) — FALSO
+
+Um doutor em matemática mostra a curva acumulada da apuração de 2022 e afirma que: (a) com 49% × 51% "só
+uma inversão" de liderança seria raríssimo; (b) em ordens aleatórias de envio a liderança alterna; (c) entre
+as seções ~70 mil e ~110 mil a curva de Bolsonaro tem um serrilhado e "quedas lineares", sinal de um
+algoritmo que o "penaliza"; (d) sem isso ele teria 60–65%. `scripts/17_ordem_aleatoria.py`, 200 ordens
+aleatórias:
+
+| | 2022 | 2026 |
+|---|---:|---:|
+| Trocas de liderança, ordem aleatória (mediana; máx.) | 11; 89 | 5; 50 |
+| Última troca, ordem aleatória (mediana; máx.) | seção 176; 3.372 (0,71%) | seção 34; 1.326 (0,27%) |
+| Amplitude da curva entre as seções 70 mil e 110 mil, ordem aleatória (mediana; máx.) | 0,06; 0,12 ponto | 0,06; 0,14 ponto |
+| Ordem real (`DT_BU_RECEBIDO`): última troca | 67,6% | 47,2% |
+
+- **(a)/(b) A premissa está invertida.** Em ordem aleatória a curva converge para o valor final em poucas
+  centenas de seções: todas as trocas acontecem no início (no máximo 0,71% da apuração) e ficam
+  invisíveis no gráfico. Na ordem real de 2022 houve 18 trocas: 3 nas primeiras 1.025 seções e 15 num trecho
+  de ~100 seções perto da 319 mil, com as curvas encostadas — a virada de 67,6%.
+- **(c) O gráfico dele é a ordem real, não uma ordem aleatória.** A fatia de Bolsonaro na ordem real entre
+  as seções 70 mil e 110 mil vai de 51,67% a 51,32%, exatamente o eixo do vídeo (0,515–0,518); numa ordem
+  aleatória a curva já estaria em ~49,1%. A "queda linear" é a deriva de uma chegada que não é aleatória
+  (seção 9: dentro de cada estado, os últimos BUs votam ~2 pontos a mais no 13), e o serrilhado tem a mesma
+  amplitude (~0,1 ponto) que o ruído de uma ordem aleatória.
+- **(d) O total não depende da ordem.** A soma dos BUs é a mesma em qualquer ordem de chegada, e cada BU
+  é impresso e afixado na seção. Recortar trechos de uma curva que oscila décimos de ponto não leva de 49%
+  a 60–65%.
+
 ## Pendências
 
 - **Logs das urnas (~134 GB):** permitiriam contar exatamente os votos registrados depois das 17h e
